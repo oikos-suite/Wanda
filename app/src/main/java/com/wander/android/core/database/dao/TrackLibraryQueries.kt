@@ -210,7 +210,10 @@ interface TrackLibraryQueries {
      * [Transaction], for the reason [LibraryBrowseDao] gives.
      */
     @Transaction
-    @Query("SELECT * FROM tracks WHERE isLive = 0 AND (isLibrary = 1 OR playCount > 0 OR lastPlayedTimestamp IS NOT NULL)")
+    @Query(
+        "SELECT * FROM tracks WHERE isLive = 0 " +
+            "AND (isLibrary = 1 OR playCount > 0 OR lastPlayedTimestamp IS NOT NULL)"
+    )
     fun getFingerprintableTracksFlow(): Flow<List<TrackEntity>>
 
     @Query(
