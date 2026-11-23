@@ -55,6 +55,7 @@ internal data class SettingsUiState(
     val agroProxyEnabled: Boolean,
     val externalLyricsEnabled: Boolean,
     val musicBrainzLookupEnabled: Boolean,
+    val radioArtworkLookupEnabled: Boolean,
     val podcastIndexEnabled: Boolean,
     val librarySync: Boolean,
     val p2pSync: Boolean,
@@ -130,6 +131,7 @@ internal fun rememberSettingsUiState(viewModel: SettingsViewModel): SettingsUiSt
     val agroProxyEnabled by viewModel.agroProxyEnabled.collectAsStateWithLifecycle()
     val externalLyricsEnabled by viewModel.externalLyricsEnabled.collectAsStateWithLifecycle()
     val musicBrainzLookupEnabled by viewModel.musicBrainzLookupEnabled.collectAsStateWithLifecycle()
+    val radioArtworkLookupEnabled by viewModel.radioArtworkLookupEnabled.collectAsStateWithLifecycle()
     val podcastIndexEnabled by viewModel.podcastIndexEnabled.collectAsStateWithLifecycle()
     val librarySync by viewModel.librarySyncEnabled.collectAsStateWithLifecycle()
     val p2pSync by viewModel.p2pSyncEnabled.collectAsStateWithLifecycle()
@@ -189,6 +191,7 @@ internal fun rememberSettingsUiState(viewModel: SettingsViewModel): SettingsUiSt
         agroProxyEnabled = agroProxyEnabled,
         externalLyricsEnabled = externalLyricsEnabled,
         musicBrainzLookupEnabled = musicBrainzLookupEnabled,
+        radioArtworkLookupEnabled = radioArtworkLookupEnabled,
         podcastIndexEnabled = podcastIndexEnabled,
         librarySync = librarySync,
         p2pSync = p2pSync,

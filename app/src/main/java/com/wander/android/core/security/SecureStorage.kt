@@ -71,6 +71,9 @@ class SecureStorage internal constructor(private val prefs: SharedPreferences) {
     val isMusicBrainzLookupEnabled: StateFlow<Boolean> = playbackPrefs.isMusicBrainzLookupEnabled
     fun setMusicBrainzLookupEnabled(enabled: Boolean) = playbackPrefs.setMusicBrainzLookupEnabled(enabled)
 
+    val isRadioArtworkLookupEnabled: StateFlow<Boolean> = playbackPrefs.isRadioArtworkLookupEnabled
+    fun setRadioArtworkLookupEnabled(enabled: Boolean) = playbackPrefs.setRadioArtworkLookupEnabled(enabled)
+
     val isPodcastIndexEnabled: StateFlow<Boolean> = playbackPrefs.isPodcastIndexEnabled
     fun setPodcastIndexEnabled(enabled: Boolean) = playbackPrefs.setPodcastIndexEnabled(enabled)
 

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.Podcasts
 import androidx.compose.material.icons.rounded.LockPerson
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.QueryStats
+import androidx.compose.material.icons.rounded.Radio
 import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material.icons.rounded.Speaker
 import androidx.compose.runtime.Composable
@@ -49,10 +50,10 @@ internal fun LazyListScope.privacyTab(
         )
     }
 
-    // Grouped rather than two single-toggle cards: both send a name to an external service
-    // (LRCLIB, MusicBrainz) and nothing else in this list does, so they read as one decision —
-    // "does this app talk to outside lookups at all" — with two independent answers, not two
-    // unrelated settings that happen to sit next to each other.
+    // Grouped rather than single-toggle cards: each sends a name to an external service (LRCLIB,
+    // MusicBrainz, YouTube Music and Deezer for radio covers, Podcast Index) and nothing else in
+    // this list does, so they read as one decision — "does this app talk to outside lookups at
+    // all" — with independent answers, not unrelated settings that happen to sit side by side.
     item(key = "sec_third_party_lookups") {
         SettingsSection(stringResource(R.string.settings_section_third_party_lookups))
     }
@@ -82,6 +83,16 @@ internal fun LazyListScope.privacyTab(
                 {
                     SettingsToggle(
                         modifier = Modifier.scale(rememberShelfEntranceScale(9)),
+                        title = stringResource(R.string.settings_radio_artwork_lookup),
+                        subtitle = stringResource(R.string.settings_radio_artwork_lookup_subtitle),
+                        checked = state.radioArtworkLookupEnabled,
+                        onCheckedChange = actions.onRadioArtworkLookupChange,
+                        icon = Icons.Rounded.Radio
+                    )
+                },
+                {
+                    SettingsToggle(
+                        modifier = Modifier.scale(rememberShelfEntranceScale(10)),
                         title = stringResource(R.string.settings_podcast_search),
                         subtitle = stringResource(R.string.settings_podcast_search_subtitle),
                         checked = state.podcastIndexEnabled,

@@ -70,6 +70,7 @@ internal fun CoverLedPlayerLayout(
     val cover: @Composable () -> Unit = {
         PlayerCover(
             track = track,
+            shown = state.shownTrack ?: track,
             isLiked = isLiked,
             showLyrics = showLyrics,
             onLike = viewModel::like,
@@ -144,6 +145,8 @@ private fun coverLedMeasurePolicy(immersive: Boolean) = MultiContentMeasurePolic
 @Composable
 private fun PlayerCover(
     track: UnifiedTrack,
+    /** What the cover draws: a radio station's current song; [track] is what a like acts on. */
+    shown: UnifiedTrack,
     isLiked: Boolean,
     showLyrics: Boolean,
     onLike: (UnifiedTrack) -> Unit,
@@ -174,11 +177,11 @@ private fun PlayerCover(
             .coverTapGestures(doubleTapLike, onTap = { toggleLyrics() }, onLongPress = { openSpeedPitch() })
     ) {
         if (artworkSlot != null) {
-            artworkSlot(track.artworkUrl, track.title)
+            artworkSlot(shown.artworkUrl, shown.title)
         } else {
             Artwork(
-                url = track.artworkUrl,
-                contentDescription = track.title,
+                url = shown.artworkUrl,
+                contentDescription = shown.title,
                 sizeDp = OwnArtworkSize,
                 shape = RectangleShape,
                 crossfade = true,

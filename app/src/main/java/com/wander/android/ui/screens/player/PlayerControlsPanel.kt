@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.wander.android.core.playback.PlaybackState
 import com.wander.android.core.playback.PlayerConnection
 import com.wander.android.core.playback.indexInPlayOrder
+import com.wander.android.core.playback.orderedIndices
+import com.wander.android.core.playback.playPosition
 import com.wander.android.data.model.UnifiedTrack
 
 /**
@@ -59,8 +61,11 @@ internal fun PlayerControlsPanel(
     ) {
         val previewTrack = previewIndex?.let { state.queue.getOrNull(it) }
         PlayerTitleBlock(
-            shown = previewTrack ?: track,
-            shownIndex = if (previewTrack != null) previewIndex else state.currentIndex,
+            // The heart below still acts on [track]: shownTrack is a radio's song, for display only.
+            shown = previewTrack ?: state.shownTrack ?: track,
+            // Where it sits in play order, not its queue index: the covers are laid out in play
+            // order, and under shuffle the two disagree, so the text slid in from the wrong side.
+            shownPosition = if (previewTrack != null) state.orderedIndices.indexOf(previewIndex) else state.playPosition,
             current = track,
             isLiked = isLiked,
             onToggleLike = viewModel::toggleLike,

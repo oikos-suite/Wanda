@@ -91,8 +91,35 @@ data class PlaybackState(
      * on every track change so a stale format never survives onto the wrong track; see
      * `PlayerConnection`'s extras listener.
      */
-    val actualAudioFormat: ActualAudioFormat? = null
+    val actualAudioFormat: ActualAudioFormat? = null,
+    /** The song a playing radio station announced, when it did — see [LiveNowPlaying] and [shownTrack]. */
+    val liveNowPlaying: LiveNowPlaying? = null
 ) {
+    /**
+     * [currentTrack] as the player screens draw it: a radio station's current song in place of the
+     * station, otherwise the track itself.
+     *
+     * Separate from [currentTrack] on purpose. Anything that *acts* on the track — the heart, the
+     * history, a share — must act on the station: liking writes the track it is given into Room,
+     * and handing it the song's title under the station's id would rename the station for good.
+     * Only display reads this.
+     *
+     * The song's artist takes the artist line and the station's name moves to the album slot
+     * (`Artist · Station`); with no artist announced the station keeps the artist line. The cover
+     * is the song's when a lookup found one, the station's otherwise.
+     */
+    val shownTrack: UnifiedTrack? = currentTrack?.let { station ->
+        val song = liveNowPlaying ?: return@let station
+        station.copy(
+            title = song.title,
+            artist = song.artist ?: station.title,
+            artistId = null,
+            album = if (song.artist != null) station.title else null,
+            albumId = null,
+            artworkUrl = song.artworkUrl ?: station.artworkUrl
+        )
+    }
+
     /**
      * The same snapshot with [liveIds] known to be livestreams marked as such.
      *
@@ -118,6 +145,19 @@ data class PlaybackState(
         } else {
             copy(currentTrack = track, queue = patchedQueue)
         }
+    }
+
+    /**
+     * The same snapshot carrying what a playing radio station says is on air.
+     *
+     * Ignored unless [nowPlaying] names the playing track: the extras that carry it can arrive a
+     * beat after a skip, and the last station's song must not land on whatever plays next.
+     */
+    internal fun withLiveNowPlaying(nowPlaying: LiveNowPlaying?): PlaybackState {
+        val station = currentTrack
+        val applies = nowPlaying != null && station != null && station.isLive && nowPlaying.trackId == station.id
+        val kept = if (applies) nowPlaying else null
+        return if (kept == liveNowPlaying) this else copy(liveNowPlaying = kept)
     }
 }
 

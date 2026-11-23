@@ -5,10 +5,8 @@ import android.content.Intent
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.Format
 import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
@@ -67,6 +65,8 @@ class PlaybackService : MediaLibraryService() {
 
     @Inject internal lateinit var playRequests: PlayRequestResolver
 
+    @Inject lateinit var radioArtwork: com.wander.android.data.repository.RadioArtworkLookup
+
     @Inject lateinit var episodeProgress: com.wander.android.data.repository.EpisodeProgressRepository
 
     @Inject @field:com.wander.android.di.ArtworkHttpClient
@@ -99,7 +99,9 @@ class PlaybackService : MediaLibraryService() {
         val loudness = secureStorage.loudness
         LoudnessNormaliser(player, volume, loudness.mode, loudness.preampDb, loudnessReadout, loudnessHints, scope)
         SleepTimerEnforcer(player, volume, sleepTimer, scope)
-        player.addAnalyticsListener(AudioFormatReporter())
+        val extras = SessionExtrasPublisher { mediaSession }.also(player::addListener)
+        player.addAnalyticsListener(AudioFormatReporter(extras))
+        player.addListener(LiveNowPlayingReporter(player, scope, radioArtwork, extras::publishLiveNowPlaying))
         // The session id arrives after the player is built; the listener announces it then.
         player.addListener(externalEqualizer)
         externalEqualizer.open(player.audioSessionId)
@@ -178,24 +180,6 @@ class PlaybackService : MediaLibraryService() {
             } else {
                 ExoPlayer.PreloadConfiguration.DEFAULT
             }
-        }
-    }
-
-    /**
-     * Publishes the *actually* decoded audio format — see [ActualAudioFormat] for why this is a
-     * separate source of truth from the track's own container tags.
-     *
-     * [MediaSession] extras are the only channel for this: `AnalyticsListener` runs on the
-     * `ExoPlayer` instance itself, which [PlayerConnection] never touches directly — it only holds
-     * a `MediaController`, whose `Player` interface has no such callback.
-     */
-    private inner class AudioFormatReporter : AnalyticsListener {
-        override fun onAudioInputFormatChanged(
-            eventTime: AnalyticsListener.EventTime,
-            format: Format,
-            decoderReuseEvaluation: androidx.media3.exoplayer.DecoderReuseEvaluation?
-        ) {
-            mediaSession?.setSessionExtras(ActualAudioFormat.of(format).toBundle())
         }
     }
 

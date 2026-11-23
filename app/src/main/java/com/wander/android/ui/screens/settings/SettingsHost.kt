@@ -144,6 +144,7 @@ internal fun rememberSettingsHost(
             onProxyChange = viewModel::setAgroProxyEnabled,
             onExternalLyricsChange = viewModel::setExternalLyricsEnabled,
             onMusicBrainzLookupChange = viewModel::setMusicBrainzLookupEnabled,
+            onRadioArtworkLookupChange = viewModel::setRadioArtworkLookupEnabled,
             onPodcastIndexChange = viewModel::setPodcastIndexEnabled,
             onForgetEverything = { dialogs.confirmForgetEverything = true },
             onArtistReleaseNotificationsChange = viewModel::setArtistReleaseNotificationEnabled,

@@ -11,6 +11,8 @@ internal class PlaybackCollaborators(
     val queueManager: PlayerQueueManager,
     val retryHandler: LivePlaybackRetryHandler,
     val actualAudioFormat: MutableStateFlow<ActualAudioFormat?>,
+    /** What a playing radio station says is on air — see [LiveNowPlaying]. */
+    val liveNowPlaying: MutableStateFlow<LiveNowPlaying?>,
     val errorRecovery: TrackErrorRecovery
 )
 
@@ -44,6 +46,7 @@ internal class PlaybackEventListener(
         }
         if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) {
             collaborators.actualAudioFormat.value = null
+            collaborators.liveNowPlaying.value = null
             collaborators.errorRecovery.onItemChanged()
         }
         if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED) && player.playbackState == Player.STATE_READY) {

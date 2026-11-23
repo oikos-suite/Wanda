@@ -28,7 +28,7 @@ import com.wander.android.ui.components.scrollingTitle
 @Composable
 internal fun PlayerTitleBlock(
     shown: UnifiedTrack,
-    shownIndex: Int,
+    shownPosition: Int,
     current: UnifiedTrack,
     isLiked: Boolean,
     onToggleLike: (UnifiedTrack) -> Unit,
@@ -37,7 +37,7 @@ internal fun PlayerTitleBlock(
     modifier: Modifier = Modifier
 ) {
     Row(verticalAlignment = Alignment.Top, modifier = modifier.fillMaxWidth()) {
-        TrackTextTransition(track = shown, queueIndex = shownIndex, modifier = Modifier.weight(1f)) { track ->
+        TrackTextTransition(track = shown, playPosition = shownPosition, modifier = Modifier.weight(1f)) { track ->
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = track.title,

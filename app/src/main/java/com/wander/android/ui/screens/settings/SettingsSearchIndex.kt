@@ -98,6 +98,7 @@ internal val SettingsSearchIndex: List<SettingsSearchEntry> = listOf(
     SettingsSearchEntry(R.string.settings_incognito, PRIVACY, "incognito"),
     SettingsSearchEntry(R.string.settings_online_lyrics_lookup, PRIVACY, "third_party_lookups"),
     SettingsSearchEntry(R.string.settings_musicbrainz_lookup, PRIVACY, "third_party_lookups"),
+    SettingsSearchEntry(R.string.settings_radio_artwork_lookup, PRIVACY, "third_party_lookups"),
     SettingsSearchEntry(R.string.settings_podcast_search, PRIVACY, "third_party_lookups"),
     SettingsSearchEntry(R.string.settings_show_what_i_m_playing, PRIVACY, "visibility"),
     SettingsSearchEntry(R.string.settings_share_my_listening_stats, PRIVACY, "visibility"),
