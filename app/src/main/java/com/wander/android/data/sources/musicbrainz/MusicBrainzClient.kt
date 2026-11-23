@@ -92,6 +92,6 @@ class MusicBrainzClient @Inject constructor(
          * Name, version and a contact URL, the form MusicBrainz's policy asks for: a fixed `1.0`
          * hid which release misbehaved, and no contact left blocking as the only remedy.
          */
-        val USER_AGENT = "Wanda/${BuildConfig.VERSION_NAME} ( https://github.com/AgroUPlus/Wanda )"
+        val USER_AGENT = "Wanda/${BuildConfig.VERSION_NAME} ( https://github.com/oikos-suite/Wanda )"
     }
 }

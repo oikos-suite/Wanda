@@ -14,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val RELEASES_URL =
-    "https://api.github.com/repos/AgroUPlus/Wanda/releases/latest"
+    "https://api.github.com/repos/oikos-suite/Wanda/releases/latest"
 
 private const val TAG = "UpdateChecker"
 
