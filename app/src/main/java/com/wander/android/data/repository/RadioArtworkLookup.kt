@@ -3,9 +3,9 @@ package com.wander.android.data.repository
 import android.util.Log
 import com.wander.android.core.network.loggableMessage
 import com.wander.android.core.security.SecureStorage
-import com.wander.android.data.sources.deezer.DeezerApiClient
 import com.wander.android.data.model.SourceType
 import com.wander.android.data.model.UnifiedTrack
+import com.wander.android.data.sources.deezer.DeezerApiClient
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,17 +31,25 @@ class RadioArtworkLookup @Inject constructor(
     /** The cover of [artist]'s [title], or null when no source has a confident match. */
     suspend fun find(artist: String, title: String): String? {
         val own = musicRepository.searchAllSources("$artist $title", onlySources = OwnSources)
-        RadioArtworkMatch.pick(own, artist, title)?.let { return it.artworkUrl }
-        if (!secureStorage.isRadioArtworkLookupEnabled.value) return null
+        val ownMatch = RadioArtworkMatch.pick(own, artist, title)
+        return when {
+            ownMatch != null -> ownMatch.artworkUrl
+            secureStorage.isRadioArtworkLookupEnabled.value -> fromCatalog(artist, title)
+            else -> null
+        }
+    }
 
+    private suspend fun fromCatalog(artist: String, title: String): String? {
         // Deezer's advanced search: each field matched on its own, so a common title by somebody
         // else does not crowd the right song out of the first page.
         val query = "artist:\"${artist.quoteSafe()}\" track:\"${title.quoteSafe()}\""
-        val catalog = deezerCatalog.searchTracks(query, limit = CATALOG_RESULTS).getOrElse { error ->
-            Log.w(TAG, "Radio cover lookup failed: ${error.loggableMessage()}")
-            return null
-        }
-        return RadioArtworkMatch.pick(catalog, artist, title)?.artworkUrl
+        return deezerCatalog.searchTracks(query, limit = CATALOG_RESULTS).fold(
+            onSuccess = { RadioArtworkMatch.pick(it, artist, title)?.artworkUrl },
+            onFailure = { error ->
+                Log.w(TAG, "Radio cover lookup failed: ${error.loggableMessage()}")
+                null
+            }
+        )
     }
 
     private fun String.quoteSafe(): String = replace('"', ' ')

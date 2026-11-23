@@ -44,8 +44,9 @@ data class LiveNowPlaying(
 
         /** Reads a [Bundle] written by [toBundle], or null when it carries none of these keys. */
         fun fromBundle(bundle: Bundle): LiveNowPlaying? {
-            val trackId = bundle.getString(KEY_TRACK_ID) ?: return null
-            val title = bundle.getString(KEY_TITLE) ?: return null
+            val trackId = bundle.getString(KEY_TRACK_ID)
+            val title = bundle.getString(KEY_TITLE)
+            if (trackId == null || title == null) return null
             return LiveNowPlaying(
                 trackId = trackId,
                 title = title,
@@ -69,13 +70,9 @@ internal data class StreamTitle(val artist: String?, val title: String)
 internal fun parseStreamTitle(raw: String): StreamTitle? {
     val text = raw.trim()
     if (text.isEmpty()) return null
-    val split = text.indexOf(ARTIST_SEPARATOR)
-    if (split > 0) {
-        val artist = text.substring(0, split).trim()
-        val title = text.substring(split + ARTIST_SEPARATOR.length).trim()
-        if (artist.isNotEmpty() && title.isNotEmpty()) return StreamTitle(artist, title)
-    }
-    return StreamTitle(artist = null, title = text)
+    val artist = text.substringBefore(ARTIST_SEPARATOR, missingDelimiterValue = "").trim()
+    val title = text.substringAfter(ARTIST_SEPARATOR, missingDelimiterValue = "").trim()
+    return if (artist.isNotEmpty() && title.isNotEmpty()) StreamTitle(artist, title) else StreamTitle(null, text)
 }
 
 /**
@@ -84,19 +81,16 @@ internal fun parseStreamTitle(raw: String): StreamTitle? {
  */
 @OptIn(UnstableApi::class)
 internal fun Metadata.streamTitle(): StreamTitle? {
-    var id3Title: String? = null
-    var id3Artist: String? = null
-    for (i in 0 until length()) {
-        when (val entry = get(i)) {
-            is IcyInfo -> entry.title?.let(::parseStreamTitle)?.let { return it }
-            is TextInformationFrame -> when (entry.id) {
-                "TIT2" -> id3Title = entry.values.firstOrNull()
-                "TPE1" -> id3Artist = entry.values.firstOrNull()
-            }
-        }
-    }
-    val title = id3Title?.trim()?.takeIf { it.isNotEmpty() } ?: return null
-    return StreamTitle(id3Artist?.trim()?.takeIf { it.isNotEmpty() }, title)
+    val entries = (0 until length()).map { get(it) }
+    val icy = entries.firstNotNullOfOrNull { (it as? IcyInfo)?.title?.let(::parseStreamTitle) }
+    return icy ?: entries.filterIsInstance<TextInformationFrame>().id3StreamTitle()
+}
+
+@OptIn(UnstableApi::class)
+private fun List<TextInformationFrame>.id3StreamTitle(): StreamTitle? {
+    fun text(id: String): String? =
+        firstOrNull { it.id == id }?.values?.firstOrNull()?.trim()?.takeIf(String::isNotEmpty)
+    return text("TIT2")?.let { title -> StreamTitle(artist = text("TPE1"), title = title) }
 }
 
 private const val ARTIST_SEPARATOR = " - "

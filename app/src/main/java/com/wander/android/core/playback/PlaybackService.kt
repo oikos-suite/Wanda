@@ -42,11 +42,17 @@ import javax.inject.Inject
 class PlaybackService : MediaLibraryService() {
 
     @Inject lateinit var playerFactory: PlayerFactory
+
     @Inject lateinit var musicRepository: MusicRepository
+
     @Inject internal lateinit var agroHandoffPublisher: AgroHandoffPublisher
+
     @Inject lateinit var secureStorage: com.wander.android.core.security.SecureStorage
+
     @Inject lateinit var sleepTimer: SleepTimer
+
     @Inject lateinit var loudnessReadout: LoudnessReadout
+
     @Inject lateinit var loudnessHints: LoudnessHints
 
     @Inject lateinit var jamSkipGate: JamSkipGate

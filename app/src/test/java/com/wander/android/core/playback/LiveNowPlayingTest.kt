@@ -19,8 +19,10 @@ class LiveNowPlayingTest {
 
     @Test
     fun streamTitleSplitsOnTheFirstSeparator() {
-        assertEquals(StreamTitle("Daft Punk", "One More Time - Radio Edit"),
-            parseStreamTitle("Daft Punk - One More Time - Radio Edit"))
+        assertEquals(
+            StreamTitle("Daft Punk", "One More Time - Radio Edit"),
+            parseStreamTitle("Daft Punk - One More Time - Radio Edit")
+        )
     }
 
     @Test

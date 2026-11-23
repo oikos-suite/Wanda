@@ -45,8 +45,8 @@ internal fun TrackTextTransition(
             val motion = if (reducedMotion) {
                 fadeIn(fade) togetherWith fadeOut(fade)
             } else {
-                (slideInHorizontally(slide) { it * direction / TravelDivisor } + fadeIn(fade)) togetherWith
-                    (slideOutHorizontally(slide) { -it * direction / TravelDivisor } + fadeOut(fade))
+                (slideInHorizontally(slide) { it * direction / TRAVEL_DIVISOR } + fadeIn(fade)) togetherWith
+                    (slideOutHorizontally(slide) { -it * direction / TRAVEL_DIVISOR } + fadeOut(fade))
             }
             motion using SizeTransform(clip = false)
         },
@@ -56,4 +56,4 @@ internal fun TrackTextTransition(
 
 private data class TrackSlot(val track: UnifiedTrack, val position: Int)
 
-private const val TravelDivisor = 4
+private const val TRAVEL_DIVISOR = 4

@@ -92,7 +92,7 @@ internal fun LazyListScope.privacyTab(
                 },
                 {
                     SettingsToggle(
-                        modifier = Modifier.scale(rememberShelfEntranceScale(10)),
+                        modifier = Modifier.scale(rememberShelfEntranceScale(PODCAST_SEARCH_ENTRANCE)),
                         title = stringResource(R.string.settings_podcast_search),
                         subtitle = stringResource(R.string.settings_podcast_search_subtitle),
                         checked = state.podcastIndexEnabled,
@@ -198,3 +198,6 @@ internal fun LazyListScope.privacyTab(
         )
     }
 }
+
+/** The podcast-search row's place in the entrance stagger: last in the third-party lookups card. */
+private const val PODCAST_SEARCH_ENTRANCE = 10

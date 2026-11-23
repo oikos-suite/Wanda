@@ -30,31 +30,31 @@ internal class LiveNowPlayingReporter(
     private var lookup: Job? = null
 
     override fun onMetadata(metadata: Metadata) {
-        val item = player.currentMediaItem ?: return
-        if (!item.isLive()) return
-        val song = metadata.streamTitle() ?: return
-        val stationId = item.mediaId
-        val previous = current
-        if (previous != null && previous.trackId == stationId && previous.title == song.title &&
-            previous.artist == song.artist
-        ) {
-            return
-        }
+        val item = player.currentMediaItem?.takeIf { it.isLive() }
+        val song = item?.let { metadata.streamTitle() }
+        if (item == null || song == null || current?.isSong(item.mediaId, song) == true) return
+        announce(LiveNowPlaying(trackId = item.mediaId, title = song.title, artist = song.artist))
+    }
 
-        val announced = LiveNowPlaying(trackId = stationId, title = song.title, artist = song.artist)
+    private fun announce(announced: LiveNowPlaying) {
         current = announced
         publish(announced)
-
         lookup?.cancel()
-        val artist = song.artist ?: return
-        lookup = scope.launch {
-            val url = artwork.find(artist, song.title) ?: return@launch
-            if (current !== announced) return@launch
+        val artist = announced.artist
+        lookup = artist?.let { scope.launch { addCover(announced, it) } }
+    }
+
+    private suspend fun addCover(announced: LiveNowPlaying, artist: String) {
+        val url = artwork.find(artist, announced.title)
+        if (url != null && current === announced) {
             val withCover = announced.copy(artworkUrl = url)
             current = withCover
             publish(withCover)
         }
     }
+
+    private fun LiveNowPlaying.isSong(stationId: String, song: StreamTitle): Boolean =
+        trackId == stationId && title == song.title && artist == song.artist
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         lookup?.cancel()

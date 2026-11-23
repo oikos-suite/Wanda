@@ -28,7 +28,11 @@ class RadioArtworkMatchTest {
 
     @Test
     fun aTitleExtendedByTheStationStillMatches() {
-        val found = RadioArtworkMatch.pick(listOf(hit("Around the World", "Daft Punk")), "Daft Punk", "Around the World - Live")
+        val found = RadioArtworkMatch.pick(
+            listOf(hit("Around the World", "Daft Punk")),
+            artist = "Daft Punk",
+            title = "Around the World - Live"
+        )
         assertEquals("ytm:Around the World", found?.id)
     }
 

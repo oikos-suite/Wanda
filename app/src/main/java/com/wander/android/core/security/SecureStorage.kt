@@ -86,7 +86,8 @@ class SecureStorage internal constructor(private val prefs: SharedPreferences) {
     fun setAutoUpdateCheckEnabled(enabled: Boolean) = playbackPrefs.setAutoUpdateCheckEnabled(enabled)
 
     val isArtistReleaseNotificationEnabled: StateFlow<Boolean> = playbackPrefs.isArtistReleaseNotificationEnabled
-    fun setArtistReleaseNotificationEnabled(enabled: Boolean) = playbackPrefs.setArtistReleaseNotificationEnabled(enabled)
+    fun setArtistReleaseNotificationEnabled(enabled: Boolean) =
+        playbackPrefs.setArtistReleaseNotificationEnabled(enabled)
 
     val preferredMediaType: StateFlow<PlaybackMediaType> = playbackPrefs.preferredMediaType
     fun setPreferredMediaType(type: PlaybackMediaType) = playbackPrefs.setPreferredMediaType(type)
@@ -100,7 +101,8 @@ class SecureStorage internal constructor(private val prefs: SharedPreferences) {
     val navidromeServerUrl: String get() = accountPrefs.navidromeServerUrl
     val navidromeUsername: String get() = accountPrefs.navidromeUsername
     val navidromePassword: String get() = accountPrefs.navidromePassword
-    fun setNavidromeCredentials(u: String, user: String, pass: String) = accountPrefs.setNavidromeCredentials(u, user, pass)
+    fun setNavidromeCredentials(u: String, user: String, pass: String) =
+        accountPrefs.setNavidromeCredentials(u, user, pass)
     fun clearNavidromeCredentials() = accountPrefs.clearNavidromeCredentials()
 
     val ytMusicConfigured: StateFlow<Boolean> = accountPrefs.ytMusicConfigured
@@ -109,7 +111,8 @@ class SecureStorage internal constructor(private val prefs: SharedPreferences) {
     var ytMusicAccountName: String
         get() = accountPrefs.ytMusicAccountName
         set(value) { accountPrefs.ytMusicAccountName = value }
-    fun setYtMusicSession(cookie: String, visitor: String = ytMusicVisitorData) = accountPrefs.setYtMusicSession(cookie, visitor)
+    fun setYtMusicSession(cookie: String, visitor: String = ytMusicVisitorData) =
+        accountPrefs.setYtMusicSession(cookie, visitor)
     fun clearYtMusicSession() = accountPrefs.clearYtMusicSession()
 
     val deezerConfigured: StateFlow<Boolean> = accountPrefs.deezerConfigured
