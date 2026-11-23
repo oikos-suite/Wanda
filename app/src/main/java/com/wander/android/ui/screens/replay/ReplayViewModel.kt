@@ -13,6 +13,7 @@ import com.wander.android.data.replay.ReplayArtworkResolver
 import com.wander.android.data.replay.ReplayAvailability
 import com.wander.android.data.replay.ReplayRepository
 import com.wander.android.data.replay.ReplayReport
+import com.wander.android.data.replay.ReplayServerTooOld
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -94,7 +95,11 @@ internal class ReplayViewModel @Inject constructor(
                 Log.e(TAG, "Replay for $year could not be read: ${cause.message}")
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    failure = R.string.replay_error_load
+                    failure = if (cause is ReplayServerTooOld) {
+                        R.string.replay_error_old_server
+                    } else {
+                        R.string.replay_error_load
+                    }
                 )
                 return@launch
             }
@@ -103,7 +108,7 @@ internal class ReplayViewModel @Inject constructor(
                 isLoading = false,
                 deck = buildReplayDeck(report),
                 report = report,
-                isSaved = saved != null, // NOSONAR: ReplayArchivist.saved() returns ReplayReport?, so the check is needed
+                isSaved = saved != null, // NOSONAR: ReplayArchivist.saved() is nullable, so the check is needed
                 purgeableCount = archivist.purgeableCount(year)
             )
             // After the deck is up, so the story never waits on a picture.
