@@ -92,7 +92,7 @@ class AgroGraphQl @Inject constructor(
             staleRevisionOrNull(errorObject)?.let { throw it }
             if (firstError != null) {
                 throw authErrorOrNull(firstError)
-                    ?: IOException("Agro rejected the request: $firstError")
+                    ?: AgroRejected(firstError)
             }
             json["data"]?.jsonObject ?: throw IOException("Agro returned no data")
         }

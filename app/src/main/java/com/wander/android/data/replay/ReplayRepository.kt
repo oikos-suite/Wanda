@@ -61,6 +61,9 @@ internal class ReplayRepository @Inject constructor(
             // year for the account's would look like listening had disappeared, with nothing on
             // screen to say the source had changed — the same rule `StatsRepository` follows.
             replayApi.wrapped(year, zone.offsetMinutes(year))
+                .recoverCatching { cause ->
+                    throw ReplayServerTooOld.explain(cause, replayApi.serverAdvertisesReplay)
+                }
                 .mapCatching { wrapped -> fleetReport(year, wrapped, zone) }
         } else {
             runCatching { localReport(year, zone) }

@@ -26,6 +26,12 @@ internal class AgroReplayApi @Inject constructor(
 ) {
 
     /**
+     * Whether the paired server says it has Replay. Read only to explain a failure: Agro served
+     * Replay for a while before it named it, so a `false` here must never stop a request.
+     */
+    val serverAdvertisesReplay: Boolean get() = graphQl.serverSupports(CAPABILITY)
+
+    /**
      * The recap for [year].
      *
      * [username] names a friend rather than this account. The server answers for a friend only
@@ -112,5 +118,10 @@ internal class AgroReplayApi @Inject constructor(
             minutes = standing["minutes"]?.jsonPrimitive?.int ?: 0,
             suppressed = standing.bool("suppressed")
         )
+    }
+
+    companion object {
+        /** What an Agro with Replay advertises; see `server_capabilities` on the server. */
+        const val CAPABILITY = "replay.wrapped"
     }
 }
