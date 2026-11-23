@@ -626,6 +626,8 @@
     <string name="settings_paused_nothing_being_measured_until">Paused. Nothing is being measured until you resume.</string>
     <string name="settings_playlist_imported">Playlist imported! 🎉</string>
     <string name="settings_query_lrclib_when_no_local_or_server_lyrics">Query LRCLIB when no local or server lyrics are found</string>
+    <string name="settings_radio_artwork_lookup">Radio song covers</string>
+    <string name="settings_radio_artwork_lookup_subtitle">When your own library has no cover for the song a radio station is playing, look it up in Deezer\'s public catalogue. No account needed</string>
     <string name="settings_query_musicbrainz_for_accurate_artist_id">Query MusicBrainz to identify an artist by their unique id, instead of by name alone</string>
     <string name="settings_re_check_model">Re-check model</string>
     <string name="settings_ready_next_track">Ready the next track</string>

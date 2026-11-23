@@ -17,7 +17,10 @@ import com.wander.android.ui.theme.LocalReducedMotion
 /**
  * The title and artist, carried along with the cover when the track changes: the outgoing text
  * slides away the way the filmstrip moves and fades, the incoming one arrives from the other side.
- * Direction comes from the queue index, so a skip back moves the other way.
+ * Direction comes from [playPosition] — the track's place in *play* order, the order the covers
+ * are laid out in — so a skip back moves the other way. Not the queue index: under shuffle a skip
+ * forward often lands on a lower index, and the text then arrived from the opposite side to the
+ * cover it belongs to.
  *
  * A quarter of the width, not the whole of it — the cover makes the big movement, and text that
  * travelled as far would read as a second thing sliding rather than the same change.
@@ -25,7 +28,7 @@ import com.wander.android.ui.theme.LocalReducedMotion
 @Composable
 internal fun TrackTextTransition(
     track: UnifiedTrack,
-    queueIndex: Int,
+    playPosition: Int,
     modifier: Modifier = Modifier,
     content: @Composable (UnifiedTrack) -> Unit
 ) {
@@ -34,16 +37,16 @@ internal fun TrackTextTransition(
     val reducedMotion = LocalReducedMotion.current
 
     AnimatedContent(
-        targetState = TrackSlot(track, queueIndex),
+        targetState = TrackSlot(track, playPosition),
         contentKey = { it.track.id },
         modifier = modifier,
         transitionSpec = {
-            val direction = if (targetState.index >= initialState.index) 1 else -1
+            val direction = if (targetState.position >= initialState.position) 1 else -1
             val motion = if (reducedMotion) {
                 fadeIn(fade) togetherWith fadeOut(fade)
             } else {
-                (slideInHorizontally(slide) { it * direction / TravelDivisor } + fadeIn(fade)) togetherWith
-                    (slideOutHorizontally(slide) { -it * direction / TravelDivisor } + fadeOut(fade))
+                (slideInHorizontally(slide) { it * direction / TRAVEL_DIVISOR } + fadeIn(fade)) togetherWith
+                    (slideOutHorizontally(slide) { -it * direction / TRAVEL_DIVISOR } + fadeOut(fade))
             }
             motion using SizeTransform(clip = false)
         },
@@ -51,6 +54,6 @@ internal fun TrackTextTransition(
     ) { slot -> content(slot.track) }
 }
 
-private data class TrackSlot(val track: UnifiedTrack, val index: Int)
+private data class TrackSlot(val track: UnifiedTrack, val position: Int)
 
-private const val TravelDivisor = 4
+private const val TRAVEL_DIVISOR = 4

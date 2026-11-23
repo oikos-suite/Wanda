@@ -66,6 +66,7 @@ internal const val KEY_AGRO_PROXY_ENABLED = "key_agro_proxy_enabled"
 
 internal const val KEY_EXTERNAL_LYRICS = "key_external_lyrics"
 internal const val KEY_MUSICBRAINZ_LOOKUP = "key_musicbrainz_lookup"
+internal const val KEY_RADIO_ARTWORK_LOOKUP = "key_radio_artwork_lookup"
 internal const val KEY_PODCASTINDEX_ENABLED = "key_podcastindex_enabled"
 internal const val KEY_PODCASTINDEX_KEY = "key_podcastindex_key"
 internal const val KEY_PODCASTINDEX_SECRET = "key_podcastindex_secret"

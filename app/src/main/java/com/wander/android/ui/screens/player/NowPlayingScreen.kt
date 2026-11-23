@@ -101,7 +101,7 @@ internal fun NowPlayingScreen(
 
     // Extract the dominant colour from the cover art and use it to tint the player surface,
     // if enabled in Settings -> Appearance. Until it arrives or if disabled, base scheme is used.
-    val coverSeed = if (isCoverArtThemeEnabled) rememberCoverSeedColor(track.artworkUrl) else null
+    val coverSeed = if (isCoverArtThemeEnabled) rememberCoverSeedColor((state.shownTrack ?: track).artworkUrl) else null
     val dark = LocalDarkTheme.current
     val base = MaterialTheme.colorScheme
 

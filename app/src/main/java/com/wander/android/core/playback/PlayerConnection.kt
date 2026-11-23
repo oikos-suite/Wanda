@@ -51,6 +51,7 @@ class PlayerConnection @Inject constructor(
     val controller: StateFlow<MediaController?> = _controller.asStateFlow()
 
     private val _actualAudioFormat = MutableStateFlow<ActualAudioFormat?>(null)
+    private val liveNowPlaying = MutableStateFlow<LiveNowPlaying?>(null)
     val isRadioMode: StateFlow<Boolean> get() = secureStorage.isRadioMode
 
     private val _errors = MutableSharedFlow<PlaybackMessage>(extraBufferCapacity = 1)
@@ -66,7 +67,7 @@ class PlayerConnection @Inject constructor(
     val state: StateFlow<PlaybackState> = PlaybackStateFlowBuilder.create(
         controller = _controller,
         collaborators = PlaybackCollaborators(
-            queueManager, retryHandler, _actualAudioFormat, TrackErrorRecovery()
+            queueManager, retryHandler, _actualAudioFormat, liveNowPlaying, TrackErrorRecovery()
         ),
         orderLocked = _orderLocked,
         isRadioMode = secureStorage.isRadioMode,
@@ -85,6 +86,7 @@ class PlayerConnection @Inject constructor(
             .setListener(object : MediaController.Listener {
                 override fun onExtrasChanged(controller: MediaController, extras: android.os.Bundle) {
                     _actualAudioFormat.value = ActualAudioFormat.fromBundle(extras)
+                    liveNowPlaying.value = LiveNowPlaying.fromBundle(extras)
                 }
             })
             .buildAsync()
@@ -170,10 +172,12 @@ class PlayerConnection @Inject constructor(
     fun restoreQueue(snapshot: QueueSnapshot) = _controller.value?.let { queueManager.restoreQueue(it, snapshot) }
 
     val isFollowing: Boolean get() = jamCoordinator.isFollowing
-    fun setFollowing(following: Boolean, onLeave: (() -> Unit)? = null) = jamCoordinator.setFollowing(following, onLeave)
+    fun setFollowing(following: Boolean, onLeave: (() -> Unit)? = null) =
+        jamCoordinator.setFollowing(following, onLeave)
 
     val isInJam: Boolean get() = jamCoordinator.isInJam
-    fun setJamProposal(propose: ((List<UnifiedTrack>, Int) -> Unit)?) = jamCoordinator.setJamProposal(_controller.value, propose)
+    fun setJamProposal(propose: ((List<UnifiedTrack>, Int) -> Unit)?) =
+        jamCoordinator.setJamProposal(_controller.value, propose)
 
     internal fun playForJam(tracks: List<UnifiedTrack>, startPositionMs: Long = 0L) =
         jamCoordinator.playForJam(_controller.value, tracks, startPositionMs)

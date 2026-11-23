@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.stateIn
 
 /**
  * Builds the reactive [StateFlow] of [PlaybackState] by listening to Media3 player events through a
- * [PlaybackEventListener] and combining radio mode, order locks, resolved livestreams, and audio formats.
+ * [PlaybackEventListener] and combining radio mode, order locks, resolved livestreams, audio formats,
+ * and what a playing radio station says is on air.
  */
 internal object PlaybackStateFlowBuilder {
 
@@ -49,6 +50,7 @@ internal object PlaybackStateFlowBuilder {
             .combine(orderLocked) { state, locked -> state.copy(orderLocked = locked) }
             .combine(resolvedLive) { state, live -> state.withLiveIds(live) }
             .combine(collaborators.actualAudioFormat) { state, format -> state.copy(actualAudioFormat = format) }
+            .combine(collaborators.liveNowPlaying) { state, nowPlaying -> state.withLiveNowPlaying(nowPlaying) }
             .distinctUntilChanged()
             .stateIn(scope, SharingStarted.Eagerly, PlaybackState())
 

@@ -94,7 +94,7 @@ fun PlayerSheetContent(
         swipe.isSwiping && playerConnection.restartsOnPrevious
     }
     val previousArtwork = if (previousRestartsCurrent) {
-        playback.currentTrack?.artworkUrl
+        playback.shownTrack?.artworkUrl
     } else {
         playback.indexInPlayOrder(-1)?.let(playback.queue::getOrNull)?.artworkUrl
     }
@@ -134,12 +134,13 @@ fun PlayerSheetContent(
         )
     }
 
-    val currentArtwork = playback.currentTrack?.artworkUrl
+    val currentArtwork = playback.shownTrack?.artworkUrl
     rememberCoverSeedColor(currentArtwork)
 
     swipe.rememberTrackArrival(
         trackId = playback.currentTrack?.id,
-        index = playback.currentIndex,
+        // Play order, like the filmstrip: a queue index step says nothing about direction under shuffle.
+        index = playback.playPosition,
         enabled = !docked && !carouselTookOver,
         spec = MaterialTheme.motionScheme.defaultSpatialSpec()
     )
@@ -187,7 +188,7 @@ fun PlayerSheetContent(
 
             MorphingArtwork(
                 url = currentArtwork,
-                contentDescription = playback.currentTrack?.title,
+                contentDescription = playback.shownTrack?.title,
                 anchors = anchors,
                 progress = progress,
                 rawProgress = rawProgress,

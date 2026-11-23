@@ -139,7 +139,7 @@ fun WanderApp(
     val tabReselection = remember { TabReselection() }
     TrackTabOwner(navController, tabReselection)
     val shellCoverSeed = if (isCoverArtThemeEnabled) {
-        rememberCoverSeedColor(playback.currentTrack?.artworkUrl)
+        rememberCoverSeedColor(playback.shownTrack?.artworkUrl)
     } else {
         null
     }

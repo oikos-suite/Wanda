@@ -62,7 +62,7 @@ internal fun BoxScope.PlayerSheetDockedSection(
         )
     }
     MiniPlayer(
-        track = playback.currentTrack,
+        track = playback.shownTrack,
         isPlaying = playback.isPlaying,
         durationMs = playback.durationMs,
         isBuffering = playback.isBuffering,
