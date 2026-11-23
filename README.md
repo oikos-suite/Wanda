@@ -9,16 +9,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/AgroUPlus/Wanda/actions/workflows/ci.yml"><img src="https://github.com/AgroUPlus/Wanda/actions/workflows/ci.yml/badge.svg" alt="CI Status"/></a>
-  <a href="https://github.com/AgroUPlus/Wanda/releases"><img src="https://img.shields.io/github/v/release/AgroUPlus/Wanda?include_prereleases&label=release" alt="Latest Release"/></a>
+  <a href="https://github.com/oikos-suite/Wanda/actions/workflows/ci.yml"><img src="https://github.com/oikos-suite/Wanda/actions/workflows/ci.yml/badge.svg" alt="CI Status"/></a>
+  <a href="https://github.com/oikos-suite/Wanda/releases"><img src="https://img.shields.io/github/v/release/oikos-suite/Wanda?include_prereleases&label=release" alt="Latest Release"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-EUPL--1.2-blue" alt="License"/></a>
   <img src="https://img.shields.io/badge/made%20in-%F0%9F%87%AB%F0%9F%87%B7%20France-002395" alt="Made in France"/>
   <a href="https://sonarcloud.io/summary/new_code?id=AgroUPlus_Wanda"><img src="https://sonarcloud.io/api/project_badges/measure?project=AgroUPlus_Wanda&metric=alert_status" alt="Quality Gate"/></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/AgroUPlus/Agro">Agro Server</a> ·
-  <a href="https://github.com/AgroUPlus/Wander">Wander Desktop</a> ·
+  <a href="https://github.com/oikos-suite/Agro">Agro Server</a> ·
+  <a href="https://github.com/oikos-suite/Wander">Wander Desktop</a> ·
   <a href="SECURITY.md">Security</a> ·
   <a href="CONTRIBUTING.md">Contributing</a> ·
   <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>
@@ -30,7 +30,7 @@ Wanda unifies **Subsonic servers** (Navidrome, Airsonic, Gonic and friends), **l
 
 Designed for digital sovereignty and hardened operating systems like GrapheneOS: zero telemetry, zero analytics, Keystore-backed secrets, application-layer HTTPS enforcement, and battery-first background audio.
 
-Wanda is a complete player on its own. Connect it to [Agro](https://github.com/AgroUPlus/Agro), the optional server, for Jam rooms, friends, E2EE listen-along and real-time handoff with [Wander](https://github.com/AgroUPlus/Wander) on desktop.
+Wanda is a complete player on its own. Connect it to [Agro](https://github.com/oikos-suite/Agro), the optional server, for Jam rooms, friends, E2EE listen-along and real-time handoff with [Wander](https://github.com/oikos-suite/Wander) on desktop.
 
 <p align="center">
   <img width="1600" height="1000" alt="Wanda showing a Subsonic daily mix, an artist page and search across sources" src="docs/promo-wanda-sources.jpg" />
@@ -61,7 +61,7 @@ Wanda always prioritizes the highest <b>Quality</b> available with the lowest la
 <details>
 <summary><b>I keep seeing "Agro" mentioned everywhere. What is that? Do I need to host a server?</b></summary>
 <br>
-No. Wanda plays everything on its own. <a href="https://github.com/AgroUPlus/Agro">Agro</a> is a separate, optional server that connects your devices and your friends: handoff with <a href="https://github.com/AgroUPlus/Wander">Wander</a> on desktop, Jam rooms, friends, shared playlists and stats across devices. You can host it yourself or sign in to Agro Cloud.
+No. Wanda plays everything on its own. <a href="https://github.com/oikos-suite/Agro">Agro</a> is a separate, optional server that connects your devices and your friends: handoff with <a href="https://github.com/oikos-suite/Wander">Wander</a> on desktop, Jam rooms, friends, shared playlists and stats across devices. You can host it yourself or sign in to Agro Cloud.
 <br><br>
 Separately, Wanda can reach nearby phones over Bluetooth and Wi-Fi Direct with no server and no internet at all. That off-grid mode is part of Wanda, not Agro.
 <br><br>
@@ -207,8 +207,8 @@ app/src/main/java/com/wander/android/
 
 ## Installation & Updates
 
-* **Obtainium**: Add `AgroUPlus/Wanda` to [Obtainium](https://github.com/ImranR98/Obtainium) for direct, automated updates straight from GitHub releases.
-* **GitHub Releases**: Download pre-built, signed APKs from the [Releases](https://github.com/AgroUPlus/Wanda/releases) tab.
+* **Obtainium**: Add `oikos-suite/Wanda` to [Obtainium](https://github.com/ImranR98/Obtainium) for direct, automated updates straight from GitHub releases.
+* **GitHub Releases**: Download pre-built, signed APKs from the [Releases](https://github.com/oikos-suite/Wanda/releases) tab.
 * **In-App Update Check**: Navigate to Settings > About > Check for update to verify against GitHub release tags. Wanda never installs code silently in the background.
 
 ---

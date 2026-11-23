@@ -108,7 +108,7 @@ internal val SettingsSearchIndex: List<SettingsSearchEntry> = listOf(
     SettingsSearchEntry(R.string.replay_title, ABOUT, "about"),
     SettingsSearchEntry(R.string.common_duplicate_recordings, ABOUT, "about"),
     SettingsSearchEntry(R.string.settings_version, ABOUT, "about"),
-    SettingsSearchEntry(R.string.settings_agrouplus, ABOUT, "credits"),
+    SettingsSearchEntry(R.string.settings_oikos, ABOUT, "credits"),
     SettingsSearchEntry(R.string.settings_check_updates_launch, ABOUT, "credits"),
     SettingsSearchEntry(R.string.settings_debug_mode_title, ABOUT, "credits")
 )

@@ -536,7 +536,7 @@
     <string name="settings_send_files_to_server_now">Envoyer les fichiers au serveur maintenant</string>
     <string name="settings_update_other_devices_no_files_sent">Mettez à jour les informations visibles par vos autres appareils. Aucun fichier n\'est envoyé.</string>
     <string name="settings_agro_privacy_relay">Relai de confidentialité d\'Agro</string>
-    <string name="settings_agrouplus">AgroUPlus</string>
+    <string name="settings_oikos">Oikos</string>
     <string name="settings_archive_server">Archiver sur le serveur</string>
     <string name="settings_back_settings">Retour aux paramètres</string>
     <string name="settings_check_again">Vérifier à nouveau</string>

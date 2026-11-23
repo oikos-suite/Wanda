@@ -214,7 +214,7 @@ class EmbeddingModelManager @Inject constructor(
          * together whenever the model is rebuilt (see wanda-indexer `tools/build_embedder_tflite.py`).
          */
         const val MODEL_URL =
-            "https://github.com/AgroUPlus/Wanda/releases/download/embedder-v1/wanda_embedder.tflite"
+            "https://github.com/oikos-suite/Wanda/releases/download/embedder-v1/wanda_embedder.tflite"
         const val SHA256 = "50a26e9f19dbaa35de7a1efda1c3b69d471e83f860c53c7df184431e754455aa"
         const val SIZE_BYTES = 35_892_012L
 

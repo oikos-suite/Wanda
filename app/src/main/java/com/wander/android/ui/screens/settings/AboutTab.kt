@@ -28,7 +28,7 @@ import com.wander.android.ui.components.rememberShelfEntranceScale
  * No background polling: the app is battery-first, and a version check is only ever worth a
  * network round trip when someone is looking at this row.
  */
-private const val ORG_URL = "https://github.com/AgroUPlus"
+private const val ORG_URL = "https://github.com/oikos-suite"
 
 internal fun LazyListScope.aboutTab(
     state: SettingsUiState,
@@ -91,7 +91,7 @@ internal fun LazyListScope.aboutTab(
                 {
                     SettingsRow(
                         modifier = Modifier.scale(rememberShelfEntranceScale(2)),
-                        title = stringResource(R.string.settings_agrouplus),
+                        title = stringResource(R.string.settings_oikos),
                         subtitle = stringResource(R.string.settings_wanda_agro_built_here_source),
                         onClick = { actions.onOpenUrl(ORG_URL) }
                     )
