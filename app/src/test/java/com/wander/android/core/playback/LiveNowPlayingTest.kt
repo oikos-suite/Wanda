@@ -25,7 +25,7 @@ class LiveNowPlayingTest {
 
     @Test
     fun streamTitleWithoutAnArtistIsAllTitle() {
-        assertEquals(StreamTitle(null, "Big N - "), parseStreamTitle(" Big N - "))
+        assertEquals(StreamTitle(null, "Big N -"), parseStreamTitle(" Big N - "))
         assertEquals(StreamTitle(null, "The best hits"), parseStreamTitle("The best hits"))
     }
 
