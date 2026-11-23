@@ -65,8 +65,8 @@ internal class SecurePlaybackPreferences(private val prefs: SharedPreferences) {
     val isMusicBrainzLookupEnabled: StateFlow<Boolean> = _isMusicBrainzLookupEnabled.asStateFlow()
 
     /**
-     * Off until the listener turns it on: a radio song's cover is then also searched for on
-     * YouTube Music and Deezer, which sends them every song the station plays. See `RadioArtworkLookup`.
+     * Off until the listener turns it on: a radio song's cover is then also looked up in Deezer's
+     * public catalogue, which sends it every song the station plays. See `RadioArtworkLookup`.
      */
     private val _isRadioArtworkLookupEnabled = MutableStateFlow(prefs.getBoolean(KEY_RADIO_ARTWORK_LOOKUP, false))
     val isRadioArtworkLookupEnabled: StateFlow<Boolean> = _isRadioArtworkLookupEnabled.asStateFlow()

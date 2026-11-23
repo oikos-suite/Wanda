@@ -1,6 +1,9 @@
 package com.wander.android.data.repository
 
+import android.util.Log
+import com.wander.android.core.network.loggableMessage
 import com.wander.android.core.security.SecureStorage
+import com.wander.android.data.sources.deezer.DeezerApiClient
 import com.wander.android.data.model.SourceType
 import com.wander.android.data.model.UnifiedTrack
 import java.util.Locale
@@ -13,24 +16,39 @@ import javax.inject.Singleton
  * Subsonic server with no artwork of their own, and a stream's song announcement carries only
  * text, so the cover has to come from a search.
  *
- * Your own music — on this device and on your server — is always searched: the song goes nowhere
- * that does not already hold your library. YouTube Music and Deezer are searched only with
- * [SecureStorage.isRadioArtworkLookupEnabled] on, because that sends every song the station plays
- * to them as it plays, which nothing you did asked for.
+ * Your own music — on this device and on your server — is searched first, always: the song goes
+ * nowhere that does not already hold your library. Only when that finds nothing, and only with
+ * [SecureStorage.isRadioArtworkLookupEnabled] on, is Deezer's public catalogue asked — no account
+ * needed, so it covers every station whatever backends are signed in. It is behind the switch
+ * because it sends every song the station plays to Deezer as it plays.
  */
 @Singleton
 class RadioArtworkLookup @Inject constructor(
     private val musicRepository: MusicRepository,
+    private val deezerCatalog: DeezerApiClient,
     private val secureStorage: SecureStorage
 ) {
     /** The cover of [artist]'s [title], or null when no source has a confident match. */
     suspend fun find(artist: String, title: String): String? {
-        val sources = if (secureStorage.isRadioArtworkLookupEnabled.value) null else OwnSources
-        val results = musicRepository.searchAllSources("$artist $title", onlySources = sources)
-        return RadioArtworkMatch.pick(results, artist, title)?.artworkUrl
+        val own = musicRepository.searchAllSources("$artist $title", onlySources = OwnSources)
+        RadioArtworkMatch.pick(own, artist, title)?.let { return it.artworkUrl }
+        if (!secureStorage.isRadioArtworkLookupEnabled.value) return null
+
+        // Deezer's advanced search: each field matched on its own, so a common title by somebody
+        // else does not crowd the right song out of the first page.
+        val query = "artist:\"${artist.quoteSafe()}\" track:\"${title.quoteSafe()}\""
+        val catalog = deezerCatalog.searchTracks(query, limit = CATALOG_RESULTS).getOrElse { error ->
+            Log.w(TAG, "Radio cover lookup failed: ${error.loggableMessage()}")
+            return null
+        }
+        return RadioArtworkMatch.pick(catalog, artist, title)?.artworkUrl
     }
 
+    private fun String.quoteSafe(): String = replace('"', ' ')
+
     private companion object {
+        const val TAG = "RadioArtworkLookup"
+        const val CATALOG_RESULTS = 10
         val OwnSources = SourceType.entries.filter { it.isPersonalLibrary }.toSet()
     }
 }

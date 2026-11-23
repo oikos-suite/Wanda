@@ -67,6 +67,8 @@ internal fun PlayerControlsPanel(
             // order, and under shuffle the two disagree, so the text slid in from the wrong side.
             shownPosition = if (previewTrack != null) state.orderedIndices.indexOf(previewIndex) else state.playPosition,
             current = track,
+            // A station's own name in the artist line is not an artist; an announced song's is.
+            artistLinked = previewTrack?.let { !it.isLive } ?: (!track.isLive || state.liveNowPlaying?.artist != null),
             isLiked = isLiked,
             onToggleLike = viewModel::toggleLike,
             onOpenArtist = onOpenArtist,

@@ -51,7 +51,7 @@ internal fun LazyListScope.privacyTab(
     }
 
     // Grouped rather than single-toggle cards: each sends a name to an external service (LRCLIB,
-    // MusicBrainz, YouTube Music and Deezer for radio covers, Podcast Index) and nothing else in
+    // MusicBrainz, Deezer for radio covers, Podcast Index) and nothing else in
     // this list does, so they read as one decision — "does this app talk to outside lookups at
     // all" — with independent answers, not unrelated settings that happen to sit side by side.
     item(key = "sec_third_party_lookups") {

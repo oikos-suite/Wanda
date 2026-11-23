@@ -24,12 +24,18 @@ import com.wander.android.ui.components.scrollingTitle
  *
  * [shown] can run ahead of [current] while the cover carousel is mid-swipe, so the text follows the
  * gesture; the heart always belongs to [current], the track it would actually like.
+ *
+ * [artistLinked] is false when the artist line names no artist at all — a radio station that
+ * announced no song shows its own name there — so it does not open an artist page for the station.
+ * A song's artist opens by name (no id), which is the page that gathers that artist from every
+ * source rather than the one backend a search happened to match.
  */
 @Composable
 internal fun PlayerTitleBlock(
     shown: UnifiedTrack,
     shownPosition: Int,
     current: UnifiedTrack,
+    artistLinked: Boolean,
     isLiked: Boolean,
     onToggleLike: (UnifiedTrack) -> Unit,
     onOpenArtist: ((String, String?) -> Unit)?,
@@ -48,7 +54,7 @@ internal fun PlayerTitleBlock(
                     overflow = TextOverflow.Clip,
                     modifier = Modifier.scrollingTitle()
                 )
-                ArtistAlbumLine(track, onOpenArtist, onOpenAlbum)
+                ArtistAlbumLine(track, onOpenArtist.takeIf { artistLinked }, onOpenAlbum)
             }
         }
         LikeButton(
