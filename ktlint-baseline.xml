@@ -2094,7 +2094,6 @@
     </file>
     <file name="app/src/main/java/com/wander/android/ui/screens/replay/ReplayViewModel.kt">
         <error line="3" column="1" source="standard:import-ordering" />
-        <error line="106" column="121" source="standard:max-line-length" />
     </file>
     <file name="app/src/main/java/com/wander/android/ui/screens/replay/ReplayVisuals.kt">
         <error line="33" column="1" source="standard:kdoc" />
