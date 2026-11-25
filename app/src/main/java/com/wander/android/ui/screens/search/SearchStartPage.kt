@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,21 +27,24 @@ import com.wander.android.R
 import com.wander.android.data.repository.MoodPreset
 
 /**
- * What Search shows under an empty field: the last few searches as chips, then the mood radios.
+ * What Search shows under an empty field: the last few searches as chips, then the mood radios
+ * and "Surprise me", the radio with no mood at all.
  *
- * The moods are the same presets as Home's radio button, so a mood is one tap from either place.
- * Each tile starts a radio drawn from every connected source — see `MoodRadioRepository`.
+ * Each tile starts a radio drawn from every connected source — see `MoodRadioRepository`. This is
+ * the app's one place to start a radio from nothing; Home's radio button used to be the other.
  */
 @Composable
 internal fun SearchStartPage(
     recentSearches: List<String>,
     moods: List<MoodPreset>,
     playingMoodKey: String?,
+    isSurprising: Boolean,
     contentPadding: PaddingValues,
     onSearch: (String) -> Unit,
     onRemoveSearch: (String) -> Unit,
     onClearSearches: () -> Unit,
     onPlayMood: (MoodPreset) -> Unit,
+    onSurprise: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -72,6 +79,20 @@ internal fun SearchStartPage(
                 onPlayMood = onPlayMood,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
+        }
+        item(key = "surprise", contentType = "surprise") {
+            FilledTonalButton(
+                onClick = onSurprise,
+                enabled = !isSurprising,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp)
+            ) {
+                Icon(Icons.Rounded.Shuffle, contentDescription = null)
+                val label = if (isSurprising) R.string.home_radio_starting else R.string.home_radio_surprise_me
+                Text(text = stringResource(label), modifier = Modifier.padding(start = 8.dp))
+            }
         }
     }
 }

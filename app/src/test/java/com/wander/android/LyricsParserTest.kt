@@ -1,13 +1,7 @@
 package com.wander.android
 
 import com.wander.android.core.database.dao.LyricSearchResult
-import com.wander.android.core.database.dao.CatalogLyricHit
-import com.wander.android.core.database.dao.CatalogRecordingDao
-import com.wander.android.core.database.dao.CatalogVector
-import com.wander.android.core.database.dao.Centroid
-import com.wander.android.core.database.dao.Evictable
 import com.wander.android.core.database.dao.TrackLyricsDao
-import com.wander.android.core.database.entity.CatalogRecordingEntity
 import com.wander.android.core.database.entity.TrackLyricsEntity
 import com.wander.android.core.network.HttpClientFactory
 import com.wander.android.core.security.FakeSharedPreferences
@@ -69,21 +63,7 @@ class LyricsParserTest {
             override fun countFromCatalogueFlow(): Flow<Int> = flowOf(0)
             override suspend fun trackIdsNamed(title: String, artist: String): List<String> = emptyList()
         }
-        val noCatalogue = object : CatalogRecordingDao {
-            override suspend fun insert(recording: CatalogRecordingEntity) {}
-            override suspend fun insertFts(recordingId: String, plainLyrics: String) {}
-            override suspend fun deleteFts(recordingId: String) {}
-            override suspend fun byId(recordingId: String): CatalogRecordingEntity? = null
-            override suspend fun centroids(model: String, version: Int): List<Centroid> = emptyList()
-            override fun countFlow(model: String, version: Int): Flow<Int> = flowOf(0)
-            override suspend fun vectors(ids: List<String>, model: String, version: Int): List<CatalogVector> = emptyList()
-            override suspend fun searchByLyrics(query: String, limit: Int): List<CatalogLyricHit> = emptyList()
-            override suspend fun touch(recordingId: String, at: Long) {}
-            override suspend fun vectorBytes(): Long = 0L
-            override suspend fun evictionOrder(limit: Int): List<Evictable> = emptyList()
-            override suspend fun dropFingerprints(ids: List<String>) {}
-        }
-        val repo = LyricsRepository(emptySet(), cachedDao, noCatalogue, HttpClientFactory.ktorClient, fakeSecureStorage())
+        val repo = LyricsRepository(emptySet(), cachedDao, HttpClientFactory.ktorClient, fakeSecureStorage())
         val state = repo.getLyrics("track_123", "Title", "Artist")
         val data = (state as? LyricsState.Present)?.lyrics
         org.junit.Assert.assertNotNull(data)

@@ -4,8 +4,6 @@ import com.wander.android.core.database.dao.TrackLyricsDao
 import com.wander.android.core.database.entity.TrackLyricsEntity
 import com.wander.android.core.security.SecureStorage
 import com.wander.android.data.model.LyricLine
-import com.wander.android.core.database.dao.CatalogRecordingDao
-import com.wander.android.data.model.LyricMatch
 import com.wander.android.data.model.LyricsData
 import com.wander.android.data.model.LyricsState
 import com.wander.android.data.sources.IMusicSource
@@ -14,7 +12,6 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.parameter
-import android.database.sqlite.SQLiteException
 import android.util.Log
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +36,6 @@ data class LrclibResponse(
 class LyricsRepository @Inject constructor(
     private val sources: Set<@JvmSuppressWildcards IMusicSource>,
     private val trackLyricsDao: TrackLyricsDao,
-    private val catalogDao: CatalogRecordingDao,
     private val client: HttpClient,
     private val secureStorage: SecureStorage
 ) {
@@ -239,56 +235,6 @@ class LyricsRepository @Inject constructor(
             )
         )
         trackLyricsDao.deleteFts(trackId)
-    }
-
-    suspend fun searchByLyrics(query: String, limit: Int = 25): List<LyricMatch> = withContext(Dispatchers.IO) {
-        val words = query.trim().split(Regex("\\s+")).filter { it.isNotBlank() }
-        if (words.isEmpty()) return@withContext emptyList()
-        val ftsQuery = words.mapIndexed { idx, term ->
-            val clean = term.replace(Regex("[^\\p{L}\\p{Nd}]"), "")
-            if (idx == words.size - 1) "$clean*" else clean
-        }.filter { it.isNotBlank() && it != "*" }.joinToString(" ")
-        if (ftsQuery.isBlank()) return@withContext emptyList()
-
-        try {
-            val results = trackLyricsDao.searchTracksByLyrics(ftsQuery, limit * 2)
-            val matches = results.map { res ->
-                val (line, ts) = findMatchingLine(res.plainLyrics, res.syncedLyrics, query)
-                LyricMatch(
-                    track = res.track.toUnifiedTrack(),
-                    matchedLine = line,
-                    snippet = res.snippet,
-                    timestampMs = ts,
-                    source = "LyricsFTS"
-                )
-            }
-            // Recordings the catalogue knows and the library lacks. Their tracks are stubs, which
-            // the caller resolves; sorting by priority puts them behind any copy that is held.
-            val fromCatalogue = catalogDao.searchByLyrics(ftsQuery, limit).map { hit ->
-                val (line, ts) = findMatchingLine(hit.recording.plainLyrics.orEmpty(), hit.recording.syncedLyrics, query)
-                LyricMatch(
-                    track = hit.recording.toStubTrack(),
-                    matchedLine = line,
-                    snippet = hit.snippet,
-                    timestampMs = ts,
-                    source = "Agro"
-                )
-            }
-            // Deduplicate across sources (Local > Navidrome > YTM) using canonical recordingKey
-            val seenKeys = mutableSetOf<String>()
-            val deduplicated = mutableListOf<LyricMatch>()
-            for (match in (matches + fromCatalogue).sortedBy { it.track.source.priority }) {
-                val key = TrackDeduplicator.recordingKey(match.track)
-                if (seenKeys.add(key)) {
-                    deduplicated.add(match)
-                }
-                if (deduplicated.size >= limit) break
-            }
-            deduplicated
-        } catch (e: SQLiteException) {
-            Log.w(TAG, "Lyric search query failed: ${e.message}")
-            emptyList()
-        }
     }
 
     fun parseLrc(lrcContent: String): List<LyricLine> = LrcParser.parse(lrcContent)

@@ -34,8 +34,8 @@ class YTMusicCatalogLoader @Inject constructor(
         }
 
     /**
-     * Songs, records and artists for one query, as three filtered searches side by side — InnerTube
-     * has no single call that answers all three in full. Any of them failing fails the lot: songs
+     * Songs, records, artists and playlists for one query, as filtered searches side by side — InnerTube
+     * has no single call that answers them all in full. Any of them failing fails the lot: songs
      * shown without the records the user may have been looking for would read as "no records".
      * Videos and episodes are only ever tracks, so they stay a single search.
      */
@@ -45,11 +45,13 @@ class YTMusicCatalogLoader @Inject constructor(
             val tracks = async { search(query, kind) }
             val albums = async { innerTube.search(query, ALBUMS_FILTER).map { it.albumSearchResults() } }
             val artists = async { innerTube.search(query, ARTISTS_FILTER).map { it.artistSearchResults() } }
+            val playlists = async { innerTube.search(query, PLAYLISTS_FILTER).map { it.playlistSearchResults() } }
             runCatching {
                 SearchCatalog(
                     tracks = tracks.await().getOrThrow(),
                     albums = albums.await().getOrThrow(),
-                    artists = artists.await().getOrThrow()
+                    artists = artists.await().getOrThrow(),
+                    playlists = playlists.await().getOrThrow()
                 )
             }
         }
@@ -200,6 +202,15 @@ class YTMusicCatalogLoader @Inject constructor(
         nextPage = { innerTube.browseContinuation(it) },
         parse = { it.libraryPlaylists() }
     ).all().map { playlists -> playlists.distinctBy { it.id } }
+
+    /**
+     * One playlist: the library's entry when the account keeps it, else what its own page says.
+     * Null when neither names it, which the playlist screen shows as a playlist with no title.
+     */
+    suspend fun getPlaylist(playlistId: String): Result<UnifiedPlaylist?> {
+        getPlaylists().getOrNull()?.firstOrNull { it.id == playlistId }?.let { return Result.success(it) }
+        return innerTube.browse(playlistId.removePrefix(YTM_PREFIX)).map { it.playlistHeader(playlistId) }
+    }
 
     /** Every track, not the first page: a fresh walk each time, since a playlist is edited. */
     suspend fun getPlaylistTracks(playlistId: String): Result<List<UnifiedTrack>> =

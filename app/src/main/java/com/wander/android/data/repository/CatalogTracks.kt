@@ -24,7 +24,10 @@ internal fun CatalogRecordingEntity.toStubTrack() = UnifiedTrack(
 @Singleton
 class CatalogTrackResolver @Inject constructor(private val trackMatcher: TrackMatcher) {
 
-    /** Null when no active source has it — a normal outcome for a song nobody here can play yet. */
-    suspend fun playable(stub: UnifiedTrack): UnifiedTrack? =
-        trackMatcher.match(stub.title, stub.artist, stub.durationMs)
+    /**
+     * Null when no active source has it — a normal outcome for a song nobody here can play yet.
+     * [onlySources] keeps the search to those backends, as the search screen's chips ask.
+     */
+    suspend fun playable(stub: UnifiedTrack, onlySources: Set<SourceType>? = null): UnifiedTrack? =
+        trackMatcher.match(stub.title, stub.artist, stub.durationMs, onlySources)
 }

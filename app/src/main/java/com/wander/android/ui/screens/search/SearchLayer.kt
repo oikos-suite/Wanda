@@ -26,6 +26,7 @@ fun SearchLayer(
     contentPadding: PaddingValues,
     onOpenAlbum: (String) -> Unit,
     onOpenArtist: (String, String?) -> Unit,
+    onOpenPlaylist: (String) -> Unit,
     searchViewModel: SearchViewModel = hiltViewModel(),
     historyViewModel: SearchHistoryViewModel = hiltViewModel(),
     base: @Composable () -> Unit
@@ -55,6 +56,7 @@ fun SearchLayer(
                 contentPadding = contentPadding,
                 onOpenAlbum = onOpenAlbum,
                 onOpenArtist = onOpenArtist,
+                onOpenPlaylist = onOpenPlaylist,
                 viewModel = searchViewModel,
                 historyViewModel = historyViewModel
             )

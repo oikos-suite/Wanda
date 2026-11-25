@@ -96,6 +96,7 @@ internal class SearchAndDiscoveryRepository(
             tracks = TrackDeduplicator.deduplicate((cached + remote).distinctBy { it.id }),
             albums = (libraryAlbums + remoteAlbums).distinctBy { it.id },
             artists = found.flatMap { it.artists }.distinctBy { it.id },
+            playlists = found.flatMap { it.playlists }.distinctBy { it.id },
             askedSources = answers.map { it.first },
             failedSources = answers.filter { it.second.isFailure }.map { it.first }
         )

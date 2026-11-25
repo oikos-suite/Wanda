@@ -281,7 +281,6 @@ fun WanderApp(
                     sheetState = sheetState,
                     snackbarHostState = snackbarHostState,
                     shell = ShellOverlayState(
-                        currentRoute = currentRoute,
                         showChrome = showChrome,
                         isPlayingHere = isPlayingHere,
                         dockBottom = dockBottom,

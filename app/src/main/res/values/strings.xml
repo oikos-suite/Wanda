@@ -83,7 +83,6 @@
     <string name="mood_preset_morning_energizer">Morning Energizer</string>
     <string name="mood_preset_high_voltage">High Voltage</string>
     <string name="home_radio_surprise_me">Surprise me</string>
-    <string name="home_radio_open_picker">Start radio</string>
     <string name="home_radio_starting">Starting radio</string>
 
     <!-- Swipeable track row -->
