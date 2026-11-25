@@ -42,7 +42,6 @@ class NativeLyricsTest {
         override suspend fun trackIdsNamed(title: String, artist: String): List<String> = emptyList()
     }
 
-
     private class FakeSource(private val answer: Result<LyricsData?>) : IMusicSource {
         override val sourceType = SourceType.NAVIDROME
         override val displayName = "Fake"

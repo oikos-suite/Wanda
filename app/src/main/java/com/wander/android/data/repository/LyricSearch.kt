@@ -6,10 +6,10 @@ import com.wander.android.core.database.dao.CatalogRecordingDao
 import com.wander.android.core.database.dao.TrackLyricsDao
 import com.wander.android.data.model.LyricMatch
 import com.wander.android.data.model.SourceType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Finds songs by a line of their lyrics, for the search screen's "in the lyrics" section: the

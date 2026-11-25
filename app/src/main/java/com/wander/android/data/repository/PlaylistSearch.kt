@@ -2,10 +2,10 @@ package com.wander.android.data.repository
 
 import com.wander.android.data.model.SourceType
 import com.wander.android.data.model.UnifiedPlaylist
-import kotlinx.coroutines.flow.first
 import java.text.Normalizer
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.first
 
 /**
  * The playlists a search names: the library's own first, then what the backends returned.
