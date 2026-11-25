@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CloudOff
 import androidx.compose.material3.LoadingIndicator
@@ -21,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -34,13 +32,10 @@ import com.wander.android.ui.components.AddToPlaylistHost
 import com.wander.android.ui.components.EmptyState
 import com.wander.android.ui.components.SearchKindToggle
 import com.wander.android.ui.components.SourceToggleChips
-import com.wander.android.ui.components.TrackRow
 import com.wander.android.ui.components.headerInset
 import com.wander.android.ui.components.nestedListInset
-import com.wander.android.ui.components.rememberShelfEntranceScale
 import com.wander.android.ui.components.selection.SelectedTrack
 import com.wander.android.ui.components.selection.TrackSelectionBar
-import com.wander.android.ui.components.selection.TrackSwipeBox
 import com.wander.android.ui.components.selection.rememberTrackSelectionState
 import com.wander.android.ui.screens.home.MoodMatrixViewModel
 
@@ -49,6 +44,7 @@ fun SearchScreen(
     contentPadding: PaddingValues,
     onOpenAlbum: (String) -> Unit,
     onOpenArtist: (String, String?) -> Unit,
+    onOpenPlaylist: (String) -> Unit,
     viewModel: SearchViewModel = hiltViewModel(),
     historyViewModel: SearchHistoryViewModel = hiltViewModel(),
     moodViewModel: MoodMatrixViewModel = hiltViewModel()
@@ -63,6 +59,7 @@ fun SearchScreen(
     var actionsFor by remember { mutableStateOf<UnifiedTrack?>(null) }
     var albumActionsFor by remember { mutableStateOf<UnifiedAlbum?>(null) }
     var isLyricsExpanded by rememberSaveable(query) { mutableStateOf(false) }
+    var arePlaylistsExpanded by rememberSaveable(query) { mutableStateOf(false) }
 
     val addToPlaylist = AddToPlaylistHost()
 
@@ -145,11 +142,13 @@ fun SearchScreen(
                         recentSearches = recentSearches,
                         moods = MoodPresets,
                         playingMoodKey = moodState.playingKey,
+                        isSurprising = moodState.isSurprising,
                         contentPadding = contentPadding.nestedListInset(),
                         onSearch = historyViewModel::search,
                         onRemoveSearch = historyViewModel::remove,
                         onClearSearches = historyViewModel::clear,
-                        onPlayMood = moodViewModel::playMood
+                        onPlayMood = moodViewModel::playMood,
+                        onSurprise = moodViewModel::playSurprise
                     )
 
                     !state.hasQuery -> EmptyState(
@@ -185,6 +184,14 @@ fun SearchScreen(
                             viewModel.rememberQuery()
                             onOpenAlbum(albumId)
                         }
+                        playlistResultsSection(
+                            playlists = state.playlists,
+                            expanded = arePlaylistsExpanded,
+                            onToggleExpanded = { arePlaylistsExpanded = !arePlaylistsExpanded }
+                        ) { playlistId ->
+                            viewModel.rememberQuery()
+                            onOpenPlaylist(playlistId)
+                        }
                         lyricMatchesSection(
                             matches = state.lyricMatches,
                             query = query,
@@ -193,40 +200,15 @@ fun SearchScreen(
                             onPlay = { match -> viewModel.playTrackAtTimestamp(match.track, match.timestampMs) },
                             onLongPress = { track -> actionsFor = track }
                         )
-                        val hasOtherSections = state.lyricMatches.isNotEmpty() ||
-                            state.albums.isNotEmpty() || state.artists.isNotEmpty()
-                        if (hasOtherSections && state.results.isNotEmpty()) {
-                            searchSectionHeader(key = "header_tracks", title = R.string.search_songs)
-                        }
-
-                        itemsIndexed(
-                            items = state.results,
-                            key = { _, track -> track.id },
-                            contentType = { _, _ -> "track" }
-                        ) { index, track ->
-                            val entranceScale = rememberShelfEntranceScale(index)
-                            val item = SelectedTrack(track.id, track)
-                            TrackSwipeBox(
-                                track = track,
-                                enabled = !selection.isActive,
-                                modifier = Modifier.animateItem().scale(entranceScale)
-                            ) {
-                                TrackRow(
-                                    track = track,
-                                    // A radio from the tapped song, not the results list.
-                                    //
-                                    // The list is everything matching a string: searching "Signals" and
-                                    // pressing one of them queued every other song with "Signals" in its
-                                    // name, by unrelated artists, in relevance order. That is a spelling
-                                    // coincidence, not a running order. A station seeded from the track
-                                    // plays it first and then what actually sounds like it, across every
-                                    // configured source — see `PlaybackCoordinator.startRadio`.
-                                    onPlay = selection.onTap(item) { viewModel.startRadio(track) },
-                                    onLongPress = selection.onLongPress(item) { actionsFor = track },
-                                    selected = selection.stateOf(item.key)
-                                )
-                            }
-                        }
+                        val hasOtherSections = state.lyricMatches.isNotEmpty() || state.albums.isNotEmpty() ||
+                            state.artists.isNotEmpty() || state.playlists.isNotEmpty()
+                        trackResultsSection(
+                            tracks = state.results,
+                            withHeader = hasOtherSections,
+                            selection = selection,
+                            onPlay = viewModel::startRadio,
+                            onLongPress = { track -> actionsFor = track }
+                        )
                     }
                 }
             }

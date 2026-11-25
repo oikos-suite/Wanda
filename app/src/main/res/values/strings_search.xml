@@ -20,6 +20,11 @@
     <!-- Section headings in the search results. -->
     <string name="search_section_artists">Artists</string>
     <string name="search_section_albums">Albums</string>
+    <string name="search_section_playlists">Playlists</string>
+    <plurals name="search_playlists_show_more">
+        <item quantity="one">Show %1$d more playlist</item>
+        <item quantity="other">Show %1$d more playlists</item>
+    </plurals>
 
     <!-- Recent searches, shown while the search field is focused and empty. -->
     <string name="search_recent_title">Recent searches</string>

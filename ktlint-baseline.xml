@@ -199,9 +199,9 @@
     </file>
     <file name="app/src/main/java/com/wander/android/core/playback/PlaybackService.kt">
         <error line="3" column="1" source="standard:import-ordering" />
-        <error line="50" column="1" source="standard:spacing-between-declarations-with-annotations" />
-        <error line="51" column="1" source="standard:spacing-between-declarations-with-annotations" />
         <error line="52" column="1" source="standard:spacing-between-declarations-with-annotations" />
+        <error line="53" column="1" source="standard:spacing-between-declarations-with-annotations" />
+        <error line="54" column="1" source="standard:spacing-between-declarations-with-annotations" />
     </file>
     <file name="app/src/main/java/com/wander/android/core/playback/PlayerConnection.kt">
         <error line="47" column="17" source="standard:backing-property-naming" />
@@ -533,13 +533,12 @@
     </file>
     <file name="app/src/main/java/com/wander/android/data/repository/LyricsRepository.kt">
         <error line="3" column="1" source="standard:import-ordering" />
-        <error line="268" column="121" source="standard:max-line-length" />
     </file>
     <file name="app/src/main/java/com/wander/android/data/repository/MusicRepository.kt">
-        <error line="150" column="121" source="standard:max-line-length" />
-        <error line="151" column="121" source="standard:max-line-length" />
-        <error line="161" column="121" source="standard:max-line-length" />
-        <error line="173" column="121" source="standard:max-line-length" />
+        <error line="152" column="121" source="standard:max-line-length" />
+        <error line="153" column="121" source="standard:max-line-length" />
+        <error line="163" column="121" source="standard:max-line-length" />
+        <error line="175" column="121" source="standard:max-line-length" />
     </file>
     <file name="app/src/main/java/com/wander/android/data/repository/OffGridListenAlongPoller.kt">
         <error line="3" column="1" source="standard:import-ordering" />
@@ -613,9 +612,6 @@
     </file>
     <file name="app/src/main/java/com/wander/android/data/repository/SyncOfferArtwork.kt">
         <error line="3" column="1" source="standard:import-ordering" />
-    </file>
-    <file name="app/src/main/java/com/wander/android/data/repository/TrackMatcher.kt">
-        <error line="58" column="121" source="standard:max-line-length" />
     </file>
     <file name="app/src/main/java/com/wander/android/data/repository/UniversalPlaylistLink.kt">
         <error line="3" column="1" source="standard:import-ordering" />
@@ -985,15 +981,15 @@
         <error line="58" column="1" source="standard:spacing-between-declarations-with-annotations" />
         <error line="71" column="120" source="standard:max-line-length" />
         <error line="76" column="120" source="standard:max-line-length" />
-        <error line="78" column="120" source="standard:max-line-length" />
-        <error line="80" column="120" source="standard:max-line-length" />
-        <error line="82" column="120" source="standard:max-line-length" />
-        <error line="84" column="120" source="standard:max-line-length" />
-        <error line="86" column="120" source="standard:max-line-length" />
-        <error line="88" column="120" source="standard:max-line-length" />
-        <error line="90" column="120" source="standard:max-line-length" />
-        <error line="92" column="120" source="standard:max-line-length" />
-        <error line="94" column="120" source="standard:max-line-length" />
+        <error line="81" column="120" source="standard:max-line-length" />
+        <error line="83" column="120" source="standard:max-line-length" />
+        <error line="85" column="120" source="standard:max-line-length" />
+        <error line="87" column="120" source="standard:max-line-length" />
+        <error line="89" column="120" source="standard:max-line-length" />
+        <error line="91" column="120" source="standard:max-line-length" />
+        <error line="93" column="120" source="standard:max-line-length" />
+        <error line="95" column="120" source="standard:max-line-length" />
+        <error line="97" column="120" source="standard:max-line-length" />
     </file>
     <file name="app/src/main/java/com/wander/android/di/NetworkModule.kt">
         <error line="3" column="1" source="standard:import-ordering" />
@@ -1032,7 +1028,6 @@
     </file>
     <file name="app/src/main/java/com/wander/android/ui/WanderAppOverlays.kt">
         <error line="3" column="1" source="standard:import-ordering" />
-        <error line="53" column="19" source="standard:property-naming" />
     </file>
     <file name="app/src/main/java/com/wander/android/ui/WanderAppViewModel.kt">
         <error line="3" column="1" source="standard:import-ordering" />
@@ -2600,10 +2595,7 @@
     </file>
     <file name="app/src/test/java/com/wander/android/LyricsParserTest.kt">
         <error line="3" column="1" source="standard:import-ordering" />
-        <error line="61" column="121" source="standard:max-line-length" />
-        <error line="79" column="121" source="standard:max-line-length" />
-        <error line="86" column="19" source="standard:property-wrapping" />
-        <error line="86" column="121" source="standard:max-line-length" />
+        <error line="55" column="121" source="standard:max-line-length" />
     </file>
     <file name="app/src/test/java/com/wander/android/ManualDownloadRulesTest.kt">
         <error line="15" column="120" source="standard:max-line-length" />

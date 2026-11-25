@@ -44,18 +44,24 @@ class TrackMatcher @Inject constructor(private val musicRepository: MusicReposit
      * under that name at all, and the clip is the only thing that is the same recording. Last,
      * because where both exist the song is the better thing to hand back.
      */
-    suspend fun match(title: String, artist: String, durationMs: Long): UnifiedTrack? {
+    suspend fun match(
+        title: String,
+        artist: String,
+        durationMs: Long,
+        onlySources: Set<SourceType>? = null
+    ): UnifiedTrack? {
         val query = "${artist.cleanArtist()} ${title.cleanTitle()}".trim()
-        findBestMatch(title, artist, durationMs, musicRepository.searchAllSources(query))
+        findBestMatch(title, artist, durationMs, musicRepository.searchAllSources(query, onlySources))
             ?.let { return it }
 
         val titleQuery = title.cleanTitle()
         if (titleQuery.isNotBlank()) {
-            findBestMatch(title, artist, durationMs, musicRepository.searchAllSources(titleQuery))
+            findBestMatch(title, artist, durationMs, musicRepository.searchAllSources(titleQuery, onlySources))
                 ?.let { return it }
         }
         if (query.isBlank()) return null
-        return findBestMatch(title, artist, durationMs, musicRepository.searchAllSources(query, kind = SearchKind.VIDEOS))
+        val videos = musicRepository.searchAllSources(query, onlySources, SearchKind.VIDEOS)
+        return findBestMatch(title, artist, durationMs, videos)
     }
 }
 

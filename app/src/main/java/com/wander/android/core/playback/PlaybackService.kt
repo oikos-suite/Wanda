@@ -45,6 +45,8 @@ class PlaybackService : MediaLibraryService() {
 
     @Inject lateinit var musicRepository: MusicRepository
 
+    @Inject lateinit var skipHistory: com.wander.android.data.repository.SkipHistory
+
     @Inject internal lateinit var agroHandoffPublisher: AgroHandoffPublisher
 
     @Inject lateinit var secureStorage: com.wander.android.core.security.SecureStorage
@@ -93,6 +95,7 @@ class PlaybackService : MediaLibraryService() {
             player.repeatMode = modes.repeatMode
         }
         player.addListener(PlayCountRecorder(player))
+        player.addListener(SkipRecorder(player, scope, skipHistory))
         episodeRecorder = EpisodeProgressRecorder(player, episodeProgress).also(player::addListener)
         player.addListener(AgroHandoffReporter(player, agroHandoffPublisher))
         player.addListener(NowPlayingForwarder(player, scope, scrobbleForwarding, sourceNowPlaying))

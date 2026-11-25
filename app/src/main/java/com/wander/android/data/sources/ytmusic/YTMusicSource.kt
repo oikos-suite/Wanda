@@ -140,6 +140,9 @@ class YTMusicSource @Inject constructor(
     override suspend fun getPlaylists(): Result<List<UnifiedPlaylist>> =
         catalogLoader.getPlaylists()
 
+    override suspend fun getPlaylist(playlistId: String): Result<UnifiedPlaylist?> =
+        catalogLoader.getPlaylist(playlistId)
+
     override suspend fun getPlaylistTracks(playlistId: String): Result<List<UnifiedTrack>> =
         catalogLoader.getPlaylistTracks(playlistId)
 

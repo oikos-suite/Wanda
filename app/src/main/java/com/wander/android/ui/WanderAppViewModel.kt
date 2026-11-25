@@ -3,13 +3,11 @@ package com.wander.android.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wander.android.core.audio.fingerprint.FingerprintIndexing
-import com.wander.android.core.playback.PlayerConnection
 import com.wander.android.core.security.SecureStorage
 import com.wander.android.core.update.UpdateCheckResult
 import com.wander.android.core.update.UpdateChecker
 import com.wander.android.data.replay.ReplayAvailability
 import com.wander.android.data.repository.FetchProgress
-import com.wander.android.data.repository.InstantRadioRepository
 import com.wander.android.data.repository.MusicRepository
 import com.wander.android.data.repository.SearchQueryHolder
 import com.wander.android.data.repository.ShareRepository
@@ -51,8 +49,6 @@ class WanderAppViewModel @Inject constructor(
     launchNotices: LaunchNotices,
     private val shellRequests: ShellRequests,
     private val updateChecker: UpdateChecker,
-    private val instantRadio: InstantRadioRepository,
-    private val playerConnection: PlayerConnection,
     private val searchQueryHolder: SearchQueryHolder,
     @ApplicationContext private val context: android.content.Context
 ) : ViewModel() {
@@ -74,26 +70,6 @@ class WanderAppViewModel @Inject constructor(
     fun setSearchFocused(focused: Boolean) = searchQueryHolder.setFieldFocused(focused)
 
     val isImmersivePlayer: StateFlow<Boolean> = secureStorage.isImmersivePlayer
-
-    /** The instant-radio button, hoisted to the shell. */
-    private val _isStartingRadio = MutableStateFlow(false)
-    val isStartingRadio: StateFlow<Boolean> = _isStartingRadio.asStateFlow()
-
-    /** Starts a station with nothing to go on — no seed, no chosen playlist. */
-    fun startInstantRadio() {
-        if (_isStartingRadio.value) return
-        _isStartingRadio.value = true
-        viewModelScope.launch {
-            val station = instantRadio.buildStation()
-            _isStartingRadio.value = false
-            if (station.isEmpty()) {
-                playerConnection.notifyNoStation()
-                return@launch
-            }
-            playerConnection.play(station)
-            playerConnection.setRadioMode(true)
-        }
-    }
 
     /** Routes asked for from outside the composition — a tapped notification. */
     val deepLinkRoutes = deepLinkRouter.routes

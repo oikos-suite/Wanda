@@ -14,5 +14,6 @@ internal fun NavHostController.TabWithSearch(
     contentPadding = contentPadding,
     onOpenAlbum = { navigateSettled(Routes.album(it)) },
     onOpenArtist = { name, id -> navigateSettled(Routes.artist(name, id)) },
+    onOpenPlaylist = { navigateSettled(Routes.playlist(it)) },
     base = tab
 )

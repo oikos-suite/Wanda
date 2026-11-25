@@ -3,6 +3,7 @@ package com.wander.android.data.sources.ytmusic
 import com.wander.android.data.model.SourceType
 import com.wander.android.data.model.UnifiedAlbum
 import com.wander.android.data.model.UnifiedArtist
+import com.wander.android.data.model.UnifiedPlaylist
 import kotlinx.serialization.json.JsonObject
 
 /**
@@ -39,3 +40,13 @@ internal fun JsonObject.artistSearchResults(): List<UnifiedArtist> =
     }.distinctBy { it.id }
 
 internal const val MUSIC_ARTIST_PAGE = "MUSIC_PAGE_TYPE_ARTIST"
+
+/**
+ * The playlists on a playlists-filtered search. The rows are the library-list shape, so they go
+ * through the library's parser, which already holds them to rows that open a playlist page.
+ *
+ * Never editable: a playlist found by searching belongs to YouTube or to someone else, and the
+ * library parser reads any `PL…` id as one the account could edit.
+ */
+internal fun JsonObject.playlistSearchResults(): List<UnifiedPlaylist> =
+    libraryPlaylists().map { it.copy(isEditable = false) }

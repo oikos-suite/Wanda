@@ -44,6 +44,13 @@ internal fun SearchKind.filterParam(): String = when (this) {
 internal const val ALBUMS_FILTER = "EgWKAQIYAWoMEA4QChADEAQQCRAF"
 internal const val ARTISTS_FILTER = "EgWKAQIgAWoMEA4QChADEAQQCRAF"
 
+/**
+ * Playlists, YouTube Music's own and its users' together, for the search screen's playlist rows.
+ * ytmusicapi's `playlists` filter, which unlike the others is not built from two letters; like
+ * [ALBUMS_FILTER], not yet checked against a live response from here.
+ */
+internal const val PLAYLISTS_FILTER = "Eg-KAQwIABAAGAAgACgBMABqChAEEAMQCRAFEAo="
+
 /** The browse id behind music.youtube.com's front page. */
 internal const val HOME_BROWSE_ID = "FEmusic_home"
 

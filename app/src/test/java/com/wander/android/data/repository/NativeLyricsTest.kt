@@ -1,13 +1,7 @@
 package com.wander.android.data.repository
 
-import com.wander.android.core.database.dao.CatalogLyricHit
-import com.wander.android.core.database.dao.CatalogRecordingDao
-import com.wander.android.core.database.dao.CatalogVector
-import com.wander.android.core.database.dao.Centroid
-import com.wander.android.core.database.dao.Evictable
 import com.wander.android.core.database.dao.LyricSearchResult
 import com.wander.android.core.database.dao.TrackLyricsDao
-import com.wander.android.core.database.entity.CatalogRecordingEntity
 import com.wander.android.core.database.entity.TrackLyricsEntity
 import com.wander.android.core.network.HttpClientFactory
 import com.wander.android.core.security.FakeSharedPreferences
@@ -48,21 +42,6 @@ class NativeLyricsTest {
         override suspend fun trackIdsNamed(title: String, artist: String): List<String> = emptyList()
     }
 
-    private object NoCatalogue : CatalogRecordingDao {
-        override suspend fun insert(recording: CatalogRecordingEntity) {}
-        override suspend fun insertFts(recordingId: String, plainLyrics: String) {}
-        override suspend fun deleteFts(recordingId: String) {}
-        override suspend fun byId(recordingId: String): CatalogRecordingEntity? = null
-        override suspend fun centroids(model: String, version: Int): List<Centroid> = emptyList()
-        override fun countFlow(model: String, version: Int): Flow<Int> = flowOf(0)
-        override suspend fun vectors(ids: List<String>, model: String, version: Int): List<CatalogVector> = emptyList()
-        override suspend fun searchByLyrics(query: String, limit: Int): List<CatalogLyricHit> = emptyList()
-        override suspend fun touch(recordingId: String, at: Long) {}
-        override suspend fun vectorBytes(): Long = 0L
-        override suspend fun evictionOrder(limit: Int): List<Evictable> = emptyList()
-        override suspend fun dropFingerprints(ids: List<String>) {}
-    }
-
     private class FakeSource(private val answer: Result<LyricsData?>) : IMusicSource {
         override val sourceType = SourceType.NAVIDROME
         override val displayName = "Fake"
@@ -76,7 +55,7 @@ class NativeLyricsTest {
 
     private fun repo(dao: TrackLyricsDao, source: IMusicSource): LyricsRepository {
         val storage = SecureStorage(FakeSharedPreferences()).apply { setExternalLyricsEnabled(false) }
-        return LyricsRepository(setOf(source), dao, NoCatalogue, HttpClientFactory.ktorClient, storage)
+        return LyricsRepository(setOf(source), dao, HttpClientFactory.ktorClient, storage)
     }
 
     @Test
