@@ -23,8 +23,8 @@ import kotlinx.coroutines.withContext
  * The three are taken in turn rather than one after another, so a backend that answers with forty
  * tracks cannot crowd the library's closest matches out of a twenty-track batch.
  *
- * [RadioPool] then drops the seed, its renditions and other uploads of the same song, and the
- * acoustic vectors order what is left.
+ * Songs the user keeps skipping are left out ([SkipHistory]). [RadioPool] then drops the seed, its
+ * renditions and other uploads of the same song, and the acoustic vectors order what is left.
  */
 internal class SmartRadioGenerator(
     private val trackDao: TrackDao,
@@ -33,6 +33,7 @@ internal class SmartRadioGenerator(
     private val acousticFeatures: AcousticFeatureRepository,
     private val sonicNeighbours: SonicNeighbours,
     private val renditionsOf: suspend (UnifiedTrack) -> List<UnifiedTrack>,
+    private val wornOut: suspend () -> List<UnifiedTrack>,
     private val persist: suspend (List<UnifiedTrack>, Boolean) -> Unit
 ) {
     suspend fun generateRadio(seed: UnifiedTrack, count: Int = 20): List<UnifiedTrack> =
@@ -45,7 +46,8 @@ internal class SmartRadioGenerator(
 
             val pool = RadioPool.of(
                 seed = seed,
-                candidates = RadioPool.roundRobin(interleaveBySource(fromSource), soundsLike, fromLibrary),
+                candidates = RadioPool.roundRobin(interleaveBySource(fromSource), soundsLike, fromLibrary)
+                    .withoutWornOut(wornOut()),
                 rules = recordingRules.current()
             )
             if (pool.isEmpty()) return@withContext emptyList()

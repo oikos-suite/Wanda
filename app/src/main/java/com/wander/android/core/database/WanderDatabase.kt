@@ -66,9 +66,10 @@ import com.wander.android.core.database.converter.SourceTypeConverter
         com.wander.android.core.database.entity.CatalogLyricsFtsEntity::class,
         com.wander.android.core.database.entity.RemotePlaylistEntity::class,
         com.wander.android.core.database.entity.PendingLikeEntity::class,
-        com.wander.android.core.database.entity.RemoteLikeEntity::class
+        com.wander.android.core.database.entity.RemoteLikeEntity::class,
+        com.wander.android.core.database.entity.TrackSkipEntity::class
     ],
-    version = 49,
+    version = 50,
     exportSchema = true
 )
 @TypeConverters(SourceTypeConverter::class)
@@ -99,4 +100,5 @@ abstract class WanderDatabase : RoomDatabase() {
     abstract fun libraryBrowseDao(): com.wander.android.core.database.dao.LibraryBrowseDao
     abstract fun remotePlaylistDao(): com.wander.android.core.database.dao.RemotePlaylistDao
     abstract fun likeSyncDao(): com.wander.android.core.database.dao.LikeSyncDao
+    abstract fun trackSkipDao(): com.wander.android.core.database.dao.TrackSkipDao
 }

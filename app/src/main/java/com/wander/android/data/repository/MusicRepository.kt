@@ -44,6 +44,7 @@ class MusicRepository @Inject constructor(
     private val embeddingDao: TrackEmbeddingDao,
     private val likeOutbox: LikeOutbox,
     private val likeSyncDao: com.wander.android.core.database.dao.LikeSyncDao,
+    private val skipHistory: SkipHistory,
     val sources: Set<@JvmSuppressWildcards IMusicSource>
 ) {
     private val reachability = SourceReachability(connectivity, secureStorage)
@@ -134,6 +135,7 @@ class MusicRepository @Inject constructor(
         acousticFeatures = acousticFeatures,
         sonicNeighbours = SonicNeighbours(embeddingDao),
         renditionsOf = { likesAndHistory.renditionsOf(it) },
+        wornOut = { skipHistory.wornOut() },
         persist = ::persist
     )
 

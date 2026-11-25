@@ -18,7 +18,8 @@ import kotlinx.coroutines.withContext
 @Singleton
 class MoodRadioRepository @Inject constructor(
     private val featureRepository: AcousticFeatureRepository,
-    private val trackDao: TrackDao
+    private val trackDao: TrackDao,
+    private val skipHistory: SkipHistory
 ) {
 
     /**
@@ -28,13 +29,19 @@ class MoodRadioRepository @Inject constructor(
      */
     suspend fun radioFor(tempo: Float, energy: Float, limit: Int = 30): List<UnifiedTrack> =
         withContext(Dispatchers.IO) {
-            val nearestIds = MoodRadioRanking.nearest(featureRepository.allFeatures(), tempo, energy, limit)
+            // Asked for that many more, so leaving out what the user keeps skipping still fills
+            // the queue.
+            val wornOut = skipHistory.wornOut()
+            val features = featureRepository.allFeatures()
+            val nearestIds = MoodRadioRanking.nearest(features, tempo, energy, limit + wornOut.size)
             if (nearestIds.isEmpty()) return@withContext emptyList()
 
             // Bulk lookup, not one query per candidate — same reasoning as `getTracksByIds`'s own
             // doc comment: rebuilding a shelf from N ids is one round trip, not N of them.
             val byId = trackDao.getTracksByIds(nearestIds).associateBy { it.id }
             nearestIds.mapNotNull { id -> byId[id]?.toUnifiedTrack() }
+                .withoutWornOut(wornOut)
+                .take(limit)
         }
 }
 

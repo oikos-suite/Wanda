@@ -64,10 +64,10 @@ class LyricSearchTest {
             artist: String,
             durationMs: Long?
         ): TrackLyricsEntity? = null
-        override suspend fun insertLyrics(lyrics: TrackLyricsEntity) {}
-        override suspend fun insertFts(trackId: String, plainLyrics: String) {}
-        override suspend fun deleteFts(trackId: String) {}
-        override suspend fun deleteLyrics(trackId: String) {}
+        override suspend fun insertLyrics(lyrics: TrackLyricsEntity) = Unit
+        override suspend fun insertFts(trackId: String, plainLyrics: String) = Unit
+        override suspend fun deleteFts(trackId: String) = Unit
+        override suspend fun deleteLyrics(trackId: String) = Unit
         override suspend fun searchTracksByLyrics(query: String, limit: Int): List<LyricSearchResult> = results
         override suspend fun countLyrics(): Int = results.size
         override fun countFromCatalogueFlow(): Flow<Int> = flowOf(0)
@@ -75,17 +75,17 @@ class LyricSearchTest {
     }
 
     private object NoCatalogue : CatalogRecordingDao {
-        override suspend fun insert(recording: CatalogRecordingEntity) {}
-        override suspend fun insertFts(recordingId: String, plainLyrics: String) {}
-        override suspend fun deleteFts(recordingId: String) {}
+        override suspend fun insert(recording: CatalogRecordingEntity) = Unit
+        override suspend fun insertFts(recordingId: String, plainLyrics: String) = Unit
+        override suspend fun deleteFts(recordingId: String) = Unit
         override suspend fun byId(recordingId: String): CatalogRecordingEntity? = null
         override suspend fun centroids(model: String, version: Int): List<Centroid> = emptyList()
         override fun countFlow(model: String, version: Int): Flow<Int> = flowOf(0)
         override suspend fun vectors(ids: List<String>, model: String, version: Int): List<CatalogVector> = emptyList()
         override suspend fun searchByLyrics(query: String, limit: Int): List<CatalogLyricHit> = emptyList()
-        override suspend fun touch(recordingId: String, at: Long) {}
+        override suspend fun touch(recordingId: String, at: Long) = Unit
         override suspend fun vectorBytes(): Long = 0L
         override suspend fun evictionOrder(limit: Int): List<Evictable> = emptyList()
-        override suspend fun dropFingerprints(ids: List<String>) {}
+        override suspend fun dropFingerprints(ids: List<String>) = Unit
     }
 }
